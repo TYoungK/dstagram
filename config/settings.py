@@ -130,7 +130,7 @@ USE_TZ = True
 
 
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_URL = '/static/'
+
 
 # media file (as a upload file)\
 MEDIA_URL = '/media/'
@@ -148,9 +148,11 @@ AWS_STORAGE_BUCKET_NAME = 'dstagram-tyk'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl' : 'max-age=691,200'}
 AWS_DEFAULT_ACL = 'public-read'
+AWS_LOCATION = 'static'
 
 DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
 
+STATIC_URL = 'http://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'config.asset_storage.StaticStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'startfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
