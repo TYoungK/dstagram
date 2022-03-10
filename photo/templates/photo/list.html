@@ -3,20 +3,40 @@
 {% block title %}- List{% endblock %}
 
 {% block content %}
+    {% load static %}
+    <div class="rows">
     {% for post in photos %}
-        <div class="row">
+        <div class="row mt-3">
             <div class="col-md-2"></div>
             <div class="col-md-8 panel panel-default">
                 <p><img src="{{post.photo.url}}" style="width:100%;"></p>
-                <button type="button" class="btn btn-xs btn-info">
-                    {{post.author.username}}</button>
+                <p>
+                    <a href="{% url 'photo:photo_list_user' user_id=post.author.username %}" class="btn btn-xs">
+                        {{post.author.username}}
+                    </a>
+                </p>
                 <p>{{post.text|linebreaksbr}}</p>
+                {% if post.bool_like %}
+                    <a href="javascript:;" onclick="unlike_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-like.png' %}"></a>
+                {% else %}
+                    <a href="javascript:;" onclick="like_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-unlike.png' %}"></a>
+                {% endif %}
+
+                <span class="like_count">{{post.num_like}}</span>
                 <p class="text-right">
-                    <a href="{% url 'photo:photo_detail' pk=post.id %}" class="btn btn-xs btn-success">댓글달기</a>
+                    <a href="{% url 'photo:photo_detail' pk=post.id %}" class="btn btn-xs">댓글달기</a>
                 </p>
             </div>
             <div class="col-md-2"></div>
         </div>
 
     {% endfor %}
+    </div>
+        <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 panel panel-default">
+            <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 {% endblock %}

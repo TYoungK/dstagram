@@ -3,37 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/marshall-ku/infinite-scroll/dist/infiniteScroll.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/marshall-ku/infinite-scroll/dist/infiniteScroll.js"></script>
+    <style>
+        .search_box {
+            visibility:hidden;
+            display: flex;
+            position:absolute;
+            margin-top: 0px;
+            right: 0;
+            width: 200px;
+            height: 0;
+            padding: 0px;
+            opacity:0;
+            transition:visibility 0.3s linear,opacity 0.3s linear;
+            z-index: 998;
+            flex-direction: column;
+        }
+        .search_bar {
+            display: flex;
+        }
+        .search_box_open {
+            visibility:visible;
+            opacity:1;
+        }
+        #searching_text{
+            width: 100%;
+            height: 100%;
+        }
+        a:hover{
+            text-decoration:none !important;
+        }
+        #load_next{
+            width: 100%;
+        }
+        .profile{
+            display: flex;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .profile-pic{
+            width: 128px;
+            height: 128px;
+            border-radius: 290486px;
+        }
+    </style>
+    
+    <script>
+        //ajax 사용시 csrf 토큰 생성------
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        //---------------------------------
+        $(document).ready(function(){
+            //검색 기능
+            $('#searching_text').on('propertychange change keyup paste',function(){
+                if($('#searching_text').val() != ''){
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = (e)=>{
+                    let req = e.target;
+                        if(req.readyState === XMLHttpRequest.DONE) {
+                            if(req.status === 200) {
+                                var users = JSON.parse(req.responseText);
+                                $('#search_list').html('');
+                                for(var i of users){
+                                    $('#search_list').append('<a href=/mypage/' + i.username + '><li class="list-group-item">'+ i.username +'</li></a>');
+                                }
+                            }
+                        }
+                    }
+                    // xhttp.open("GET", "{% url 'photo:search_user' user_name='x'%}"+$(this).val(), true);
+                    xhttp.open("GET", "/search/"+$(this).val(), true);
+                    xhttp.send();
+                }    
+                else{
+                    $('#search_list').html('');
+                }
+            });
+
+            //다음 리스트 불러오기
+            $('#load_next').on('click',function(){
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = (e)=>{
+                let req = e.target;
+                //console.log(req);
+                    if(req.readyState === XMLHttpRequest.DONE) {
+                        if(req.status === 200) {
+                            //console.log(req);
+                            let data = req.response;
+                            //console.log(data);
+                            let rows = $(data).find('.row');
+                            //console.log(rows.length);
+                            if(rows.length > 0){
+                                for(var row of rows){
+                                    document.querySelector('.rows').appendChild(row);
+                                }
+                                $(this).attr('data',Number($(this).attr('data'))+1);
+
+                                if(rows.length < 10){
+                                    for(btn of document.querySelectorAll('#load_next')){
+                                        btn.remove();
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                var url = document.location.href.split('/');
+                if(url[1] == 'mypage'){
+                    xhttp.open("POST", 'mypage/' + url[2], true);
+                    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+                    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhttp.send('page_num=' + (Number($(this).attr('data'))+1));
+                }else{
+                    xhttp.open("POST", '', true);
+                    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+                    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhttp.send('page_num=' + (Number($(this).attr('data'))+1));
+                }
+                
+            });
+
+        });
+        
+        function search_bar_toggle(){
+            $('.search_box').toggleClass('search_box_open');
+        }
+        
+        function like_photo(self,photo_id){
+            let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = (e)=>{
+                let req = e.target;
+                    if(req.readyState === XMLHttpRequest.DONE) {
+                        if(req.status === 200) {
+                            $(self).children('img').attr("src","{% static 'admin/img/icon-like.png' %}");
+                            $(self).attr('onclick','unlike_photo(this,' + photo_id + ')');
+                            $(self).parent().children('.like_count').text(req.responseText);
+                        }
+                    }
+                }
+                // xhttp.open("GET", "{% url 'photo:search_user' user_name='x'%}"+$(this).val(), true);
+                xhttp.open("GET", "/like/"+photo_id, true);
+                xhttp.send();
+        }
+
+        function unlike_photo(self,photo_id){
+            let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = (e)=>{
+                let req = e.target;
+                    if(req.readyState === XMLHttpRequest.DONE) {
+                        if(req.status === 200) {
+                            $(self).children('img').attr("src","{% static 'admin/img/icon-unlike.png' %}");
+                            $(self).attr('onclick','like_photo(this,' + photo_id + ')');
+                            $(self).parent().children('.like_count').text(req.responseText);
+                        }
+                    }
+                }
+                // xhttp.open("GET", "{% url 'photo:search_user' user_name='x'%}"+$(this).val(), true);
+                xhttp.open("GET", "/unlike/"+photo_id, true);
+                xhttp.send();
+        }
+
+        
+    </script>
+
     <title>Dstagram {% block title %}{% endblock %}</title>
+    
 </head>
 <body>
 
-<div class="container">
-    <header class="header clearfix">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">Dstagram</a>
-            <ul class="nav">
-                <li class="nav-item"><a href="/" class="active nav-link ">Home</a></li>
-                {% if user.is_authenticated %}
-                <li class="nav-item"><a href="#" class="nav-link">Welcome, {{user.get_username}}</a></li>
-                <li class="nav-item"><a href="{% url 'photo:photo_upload' %}" class="nav-link">Upload</a></li>
-                <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
-                {% else %}
-                <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
-                <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Signup</a></li>
-                {% endif %}
+<div class="container pr-0 pl-0">
+    
+    <header class="header clearfix" style="position: relative;">
+        <nav class="navbar navbar-light bg-light" style="z-index:999;">
+            <a class="navbar-brand mr-0" href="/">Dstagram</a>
+            <ul class="nav justify-content-end">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a href="javascript:;" class="navbar-item nav-link" style="width:57px" onclick="search_bar_toggle()">
+                    <img src="{% static 'admin/img/3844432_magnifier_search_zoom_icon.svg' %}">
+                </a>
+            </li>
+            <li class="nav-item"><a class="navbar-item nav-link" href="{% url 'photo:photo_upload' %}">Upload</a></li>
+            <li class="nav-item"><a href="{% url 'photo:photo_list_user' user_id=user.get_username%}" class="nav-link">My</a></li>
+            <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
+            {% else %}
+            <a class="navbar-item nav-link" href="{% url 'login' %}">Login</a>
+            <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Signup</a></li>
+            {% endif %}
             </ul>
+
         </nav>
+        <div class="search_box">
+            <div class="search_bar">
+                <input type="text" id="searching_text">
+                <button onclick="user_search()" class="btn btn-primary" style="padding-top:3px;margin-left: 2px;">search</button>
+            </div>
+            <ul id="search_list" class="list-group">
+            </ul>
+        </div>
+        
     </header>
-    {% block content %}
-    {% endblock %}
+    <div id="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    
 
     <footer class="footer">
-        <p>&copy; 2018 Baepeu. Powered By Django 2</p>
+        <p>&copy; Powered By Django</p>
     </footer>
 </div>
 
