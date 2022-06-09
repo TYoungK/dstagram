@@ -1,18 +1,48 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block head %}
+<script src="{% static 'public/js/splide.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'public/css/splide.min.css' %}">
+<script>
+    function setSplide(cnt){
+        var elms = document.getElementsByClassName( 'splide' );
+        var start = (Number(document.getElementById('load_next').getAttribute('data'))-1)*10;
+        for (var i=start; i<start+cnt; i++){
+            var splide = new Splide( elms[i] ).mount();
+            if(splide.length<2){
+                splide.options = {arrows:false};
+            }
+        }   
+    }
+    document.addEventListener( 'DOMContentLoaded', function() {
+        setSplide({{posts|length}});
+    });
+</script>
+{% endblock %}
 {% block title %}- List{% endblock %}
 
 {% block content %}
-    {% load static %}
     <div class="rows">
-    {% for post in photos %}
+    {% for post in posts %}
         <div class="row mt-3">
             <div class="col-md-2"></div>
             <div class="col-md-8 panel panel-default">
-                <p><img src="{{post.photo.url}}" style="width:100%;"></p>
                 <p>
-                    <a href="{% url 'photo:photo_list_user' user_id=post.author.username %}" class="btn btn-xs">
-                        {{post.author.username}}
+                    <section class="splide" aria-label="Splide Basic HTML Example">
+                        <div class="splide__track">
+                                <ul class="splide__list">
+                                    {% for photo in post.user_photos.all %}
+                                    <li class="splide__slide">
+                                        <img src="{{photo.photo.url}}" style="width:100%;">
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                      </section>
+                </p>
+                <p>
+                    <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}" class="btn btn-xs">
+                        {{post.author.tag}}
                     </a>
                 </p>
                 <p>{{post.text|linebreaksbr}}</p>
@@ -32,11 +62,16 @@
 
     {% endfor %}
     </div>
-        <div class="row">
+    <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8 panel panel-default">
-            <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
-        </div>
+            <div class="col-md-8 panel panel-default">
+                {% if posts %}
+                <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+                {% else %}
+                <p>피드가 없습니다.</p>
+                <p>다른 사람을 팔로우 해보세요!</p>
+                {% endif %}
+            </div>
         <div class="col-md-2"></div>
     </div>
 {% endblock %}

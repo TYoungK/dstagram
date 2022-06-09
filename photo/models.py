@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from accounts.models import User
 from django.urls import reverse
 # Create your models here.
-class Photo(models.Model):
-    author = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_photos')
-    photo = models.ImageField(upload_to = 'photos/%Y/%m/%d', default='photos/no_image.png')
+class Post(models.Model):
+    id = models.AutoField(primary_key=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_post')
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -17,7 +17,11 @@ class Photo(models.Model):
 
     def get_absolute_url(self):
         return reverse('photo:photo_detail',args=[str(self.id)])
-    
+
+class Photo(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,null=True, related_name='user_photos')
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', default='photos/no_image.png')
+
 class Follow(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_following')
@@ -28,6 +32,6 @@ class Follow(models.Model):
         return self.user.username + "님이 " + self.follow.username + "님을 팔로우했습니다.(" + self.created.strftime('%Y-%m-%d %H:%M:%S') + ")"
 
 class Like(models.Model):
-    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)

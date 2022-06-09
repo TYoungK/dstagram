@@ -7,12 +7,75 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8 panel panel-default">
-        <form action="" method="post" enctype="multipart/form-data">
-            {{form.as_p}}
+        <form id="form-container" action="" method="post" enctype="multipart/form-data" onsubmit="disable_on_click()">
             {% csrf_token %}
-            <input type="submit" class="btn btn-primary" value="Upload">
+            {{form.as_p}}
+            {{photos.management_form}}
+            {% for form in photos %}
+            <div class="image-form" seq="0">
+                {{form.photo}}<button class="delBtn" type="button" onclick="deleteForm(this)">X</button>
+            </div>
+            <hr>
+            {% endfor %}
+            <button id="add-form" type="button">Add Another Image</button><br>
+            <input type="submit" id="submit-btn" class="btn btn-primary" value="Upload">
         </form>
     </div>
     <div class="col-md-2"></div>
 </div>
+<script>
+    var imgForm = document.querySelectorAll(".image-form");
+    let container = document.querySelector("#form-container");
+    let addButton = document.querySelector("#add-form");
+    let totalForms = document.querySelector("#id_user_photos-TOTAL_FORMS");
+
+    let formNum = 0;
+    addButton.addEventListener('click', addForm);
+    Splide.defaults = {
+        perMove: 1,
+    }
+    function addForm(e){
+        if(formNum>8){
+            alert("한번에 최대 10개의 파일만 가능합니다.");
+            return false;
+        }
+        e.preventDefault();
+
+        let newForm = imgForm[0].cloneNode(true);
+        let formRegex = RegExp(`photos-(\\d){1}-`,'g');
+
+        formNum++;
+        newForm.setAttribute('seq', formNum);
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `photos-${formNum}-`) + '<hr>';
+        container.insertBefore(newForm, addButton);
+        
+        totalForms.setAttribute('value', `${formNum+1}`);
+
+    }
+    function deleteForm(e){
+        if(formNum<1){
+            alert("하나 이상의 파일은 필수입니다.");
+            return false;
+        }
+
+        let formRegex = RegExp(`photos-(\\d){1}-`,'g');
+        formNum--;
+        var seq = Number(e.parentNode.getAttribute('seq'));
+        imgForm = document.querySelectorAll(".image-form");
+        for(var i=seq+1; i<formNum+2; i++){
+            console.log(i);
+            console.log(imgForm[i]);
+            imgForm[i].setAttribute('seq', i-1);
+            imgForm[i].innerHTML = imgForm[i].innerHTML.replace(formRegex, `photos-${i-1}-`);
+        }
+
+        e.parentNode.remove();
+        
+        totalForms.setAttribute('value', `${formNum+1}`);
+    }
+    function disable_on_click() {
+        var element = document.getElementById('submit-btn');
+        element.setAttribute("disabled", "disabled");
+    }
+</script>
 {% endblock %}

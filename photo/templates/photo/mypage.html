@@ -1,24 +1,43 @@
 {% extends 'base.html' %}
-
-{% block title %}- List{% endblock %}
+{% load static %}
+{% block head %}
+<script src="{% static 'public/js/splide.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'public/css/splide.min.css' %}">
+<script>
+    function setSplide(cnt){
+        var elms = document.getElementsByClassName( 'splide' );
+        var start = (Number(document.getElementById('load_next').getAttribute('data'))-1)*10;
+        for (var i=start; i<start+cnt; i++){
+            var splide = new Splide( elms[i] ).mount();
+            if(splide.length<2){
+                splide.options = {arrows:false};
+            }
+        }   
+    }
+    document.addEventListener( 'DOMContentLoaded', function() {
+        setSplide({{posts|length}});
+    });
+</script>
+{% endblock %}
+{% block title %}- {{this_user.tag}}{% endblock %}
 
 {% block content %}
 {% load static %}
     <div class="profile p-3">
         <div class="col-md-2"></div>
         <div class="col-md-3">
-            <img class="profile-pic" src="https://bulma.io/images/placeholders/128x128.png">
+            <img class="profile-pic" src="{{this_user.profile_pic.url}}">
         </div>
         <div class="col-md-5">
-            {{ this_user.get_username }}
+            {{ this_user.tag }}
             {% if user.get_username == this_user.get_username %}
-            <a href="javascript:;" class="btn btn-xs btn-success">프로필변경</a>
+            <a href="{% url 'accounts:user_update' user_id=user.email %}" class="btn btn-xs btn-success">프로필 변경</a>
             {% else %}
 
                 {% if followed %}
                 <form action="{% url 'photo:unfollowing' pk=followed.id %}" method="post">
                 {% else %}
-                <form action="{% url 'photo:following' user_id=this_user.get_username %}" method="post">
+                <form action="{% url 'photo:following' user_tag=this_user.get_username %}" method="post">
                 {% endif %}
                     {% csrf_token %}
                     <input type="hidden" name="user" value="{{user.id}}">
@@ -32,44 +51,62 @@
                 </form>
             {% endif %}
             </br>
-            소개
+            {{this_user.self_intro}}
         </div>
         <div class="col-md-2"></div>
     </div>
 
     <div class="rows">
-        {% for post in photos %}
-            <div class="row mt-3">
-                <div class="col-md-2"></div>
-                <div class="col-md-8 panel panel-default">
-                    <p><img src="{{post.photo.url}}" style="width:100%;"></p>
-                    <p>
-                        <a href="{% url 'photo:photo_list_user' user_id=post.author.username %}" class="btn btn-xs">
-                            {{post.author.username}}
-                        </a>
-                    </p>
-                    <p>{{post.text|linebreaksbr}}</p>
-                    {% if post.bool_like %}
-                        <a href="javascript:;" onclick="unlike_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-like.png' %}"></a>
-                    {% else %}
-                        <a href="javascript:;" onclick="like_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-unlike.png' %}"></a>
-                    {% endif %}
+        {% for post in posts %}
+        <div class="row mt-3">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 panel panel-default">
+                <p>
+                    <section class="splide" aria-label="Splide Basic HTML Example">
+                        <div class="splide__track">
+                                <ul class="splide__list">
+                                    {% for photo in post.user_photos.all %}
+                                    <li class="splide__slide">
+                                        <img src="{{photo.photo.url}}" style="width:100%;">
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                      </section>
+                </p>
+                <p>
+                    <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}" class="btn btn-xs">
+                        {{post.author.tag}}
+                    </a>
+                </p>
+                <p>{{post.text|linebreaksbr}}</p>
+                {% if post.bool_like %}
+                    <a href="javascript:;" onclick="unlike_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-like.png' %}"></a>
+                {% else %}
+                    <a href="javascript:;" onclick="like_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-unlike.png' %}"></a>
+                {% endif %}
 
-                    <span class="like_count">{{post.num_like}}</span>
-                    <p class="text-right">
-                        <a href="{% url 'photo:photo_detail' pk=post.id %}" class="btn btn-xs">댓글달기</a>
-                    </p>
-                </div>
-                <div class="col-md-2"></div>
+                <span class="like_count">{{post.num_like}}</span>
+                <p class="text-right">
+                    <a href="{% url 'photo:photo_detail' pk=post.id %}" class="btn btn-xs">댓글달기</a>
+                </p>
             </div>
+            <div class="col-md-2"></div>
+        </div>
 
-        {% endfor %}
+    {% endfor %}
     </div>
+
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8 panel panel-default">
-            <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
-        </div>
+            <div class="col-md-8 panel panel-default">
+                {% if posts %}
+                <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+                {% else %}
+                <p>게시물이 없습니다.</p>
+                {% endif %}
+            </div>
         <div class="col-md-2"></div>
     </div>
+
 {% endblock %}

@@ -8,8 +8,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/gh/marshall-ku/infinite-scroll/dist/infiniteScroll.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/marshall-ku/infinite-scroll/dist/infiniteScroll.js"></script>
     <style>
         .search_box {
             visibility:hidden;
@@ -92,12 +90,12 @@
                                 var users = JSON.parse(req.responseText);
                                 $('#search_list').html('');
                                 for(var i of users){
-                                    $('#search_list').append('<a href=/mypage/' + i.username + '><li class="list-group-item">'+ i.username +'</li></a>');
+                                    $('#search_list').append('<a href=/mypage/' + i.tag + '><li class="list-group-item"><img src="'+ i.profile_pic +'">'+ i.tag +'</li></a>');
                                 }
                             }
                         }
                     }
-                    // xhttp.open("GET", "{% url 'photo:search_user' user_name='x'%}"+$(this).val(), true);
+                    // xhttp.open("GET", "{% url 'photo:search_user' user_tag='x'%}"+$(this).val(), true);
                     xhttp.open("GET", "/search/"+$(this).val(), true);
                     xhttp.send();
                 }    
@@ -120,17 +118,17 @@
                             let rows = $(data).find('.row');
                             //console.log(rows.length);
                             if(rows.length > 0){
-                                for(var row of rows){
-                                    document.querySelector('.rows').appendChild(row);
+                                for(var i=0;i<rows.length-1;i++){
+                                    document.querySelector('.rows').appendChild(rows[i]);
                                 }
                                 $(this).attr('data',Number($(this).attr('data'))+1);
-
-                                if(rows.length < 10){
+                                setSplide(rows.length-1);
+                                
+                                if(rows.length-1 < 10){
                                     for(btn of document.querySelectorAll('#load_next')){
                                         btn.remove();
                                     }
                                 }
-
                             }
                         }
                     }
@@ -168,7 +166,7 @@
                         }
                     }
                 }
-                // xhttp.open("GET", "{% url 'photo:search_user' user_name='x'%}"+$(this).val(), true);
+                // xhttp.open("GET", "{% url 'photo:search_user' user_tag='x'%}"+$(this).val(), true);
                 xhttp.open("GET", "/like/"+photo_id, true);
                 xhttp.send();
         }
@@ -185,14 +183,15 @@
                         }
                     }
                 }
-                // xhttp.open("GET", "{% url 'photo:search_user' user_name='x'%}"+$(this).val(), true);
+                // xhttp.open("GET", "{% url 'photo:search_user' user_tag='x'%}"+$(this).val(), true);
                 xhttp.open("GET", "/unlike/"+photo_id, true);
                 xhttp.send();
         }
 
         
     </script>
-
+    {% block head %}
+    {% endblock %}
     <title>Dstagram {% block title %}{% endblock %}</title>
     
 </head>
@@ -207,15 +206,15 @@
             {% if user.is_authenticated %}
             <li class="nav-item">
                 <a href="javascript:;" class="navbar-item nav-link" style="width:57px" onclick="search_bar_toggle()">
-                    <img src="{% static 'admin/img/3844432_magnifier_search_zoom_icon.svg' %}">
+                    <img src="{% static 'admin/img/search_zoom_icon.png' %}">
                 </a>
             </li>
             <li class="nav-item"><a class="navbar-item nav-link" href="{% url 'photo:photo_upload' %}">Upload</a></li>
-            <li class="nav-item"><a href="{% url 'photo:photo_list_user' user_id=user.get_username%}" class="nav-link">My</a></li>
-            <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
+            <li class="nav-item"><a href="{% url 'photo:photo_list_user' user_tag=user.tag%}" class="nav-link">My</a></li>
+            <li class="nav-item"><a href="{% url 'accounts:logout' %}" class="nav-link">Logout</a></li>
             {% else %}
-            <a class="navbar-item nav-link" href="{% url 'login' %}">Login</a>
-            <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Signup</a></li>
+            <a class="navbar-item nav-link" href="{% url 'accounts:login' %}">Login</a>
+            <li class="nav-item"><a href="{% url 'accounts:register' %}" class="nav-link">Signup</a></li>
             {% endif %}
             </ul>
 

@@ -21,7 +21,7 @@ sys.modules['django.utils.six.moves.urllib.request'] = __import__('six.moves.url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
-
+AUTH_USER_MODEL = 'accounts.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'storages',
     'django_celery_beat',
     'django_celery_results',
+    'extra_views',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +91,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.dstagram',
     }
 }
 
@@ -151,13 +152,14 @@ SITE_ID = 1
 AWS_ACCESS_KEY_ID = AWS_KEYS.access_key_id
 AWS_SECRET_ACCESS_KEY = AWS_KEYS.secret_access_key
 AWS_REGION = 'ap-northeast-2'
-AWS_STORAGE_BUCKET_NAME = 'dstagram-tyk'
+AWS_STORAGE_BUCKET_NAME = 'dstagram-tyks'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl' : 'max-age=691,200'}
 AWS_DEFAULT_ACL = 'public-read'
 AWS_LOCATION = 'static'
 
 DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
+#PROFILE_FILE_STORAGE = 'config.asset_storage.ProfileStorage'
 
 STATIC_URL = 'http://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'config.asset_storage.StaticStorage'
