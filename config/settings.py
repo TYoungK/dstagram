@@ -146,8 +146,13 @@ LOGIN_REDIRECT_URL = '/'
 DISQUS_WEBSITE_SHORTNAME = 'dstagram-tyk'
 SITE_ID = 1
 
-AWS_ACCESS_KEY_ID = AWS_KEYS.access_key_id
-AWS_SECRET_ACCESS_KEY = AWS_KEYS.secret_access_key
+# AWS_ACCESS_KEY_ID = AWS_KEYS.access_key_id
+# AWS_SECRET_ACCESS_KEY = AWS_KEYS.secret_access_key
+
+# 헤로쿠 업로드용
+AWS_ACCESS_KEY_ID = os.environ['S3_ACCESS_KEY']
+AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET_KEY']
+
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 'dstagram-tyks'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
