@@ -19,11 +19,7 @@ class Post(models.Model):
         return reverse('photo:photo_detail',args=[str(self.id)])
 
 class Photo(models.Model):
-<<<<<<< HEAD
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, related_name='user_photos')
-=======
-    post = models.ForeignKey(Post, on_delete=models.CASCADE,null=True, related_name='user_photos')
->>>>>>> c139b323f4ea0da824ba7a81ac053a4166a99b69
     photo = models.ImageField(upload_to='photos/%Y/%m/%d', default='photos/no_image.png')
 
 class Follow(models.Model):

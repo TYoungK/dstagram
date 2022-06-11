@@ -120,20 +120,13 @@ def photo_list_user(request, user_tag): #특정 유저의 게시글 로드
     page_num = int(request.POST.get('page_num')) if request.POST.get('page_num')!=None else 1
     this_user = get_object_or_404(User, tag=user_tag)
     followed = None
-
     follow_tmp = Follow.objects.filter(user=request.user, follow=this_user).order_by('-created')
     if follow_tmp.count():
         followed = follow_tmp[0]
-    posts = Post.objects.prefetch_related('user_photos').filter(author=this_user)[(page_num-1)*10:page_num*10-1]
 
-    #posts = posts.filter(author=this_user)[(page_num-1)*10:page_num*10-1]
-
-<<<<<<< HEAD
     posts = Post.objects.prefetch_related('user_photos').filter(author=this_user)[(page_num-1)*10:page_num*10-1]
     #posts = posts.filter(author=this_user)[(page_num-1)*10:page_num*10-1]
 
-=======
->>>>>>> c139b323f4ea0da824ba7a81ac053a4166a99b69
     return render(request, 'photo/mypage.html', {'posts': posts, 'this_user': this_user, 'followed': followed})
 
 @login_required
