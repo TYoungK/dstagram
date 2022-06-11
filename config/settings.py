@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 import sys
-from .secret_key import *
+#from .secret_key import *
 
 sys.modules['django.utils.six.moves.urllib.parse'] = __import__('six.moves.urllib.parse', fromlist=['urlencode'])
 sys.modules['django.utils.six.moves.urllib.request'] = __import__('six.moves.urllib.request', fromlist=['urlopen'])
@@ -26,7 +26,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = django_key
+SECRET_KEY = os.environ['DJANGO_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
