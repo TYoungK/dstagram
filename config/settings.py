@@ -48,9 +48,6 @@ INSTALLED_APPS = [
     'disqus',
     'django.contrib.sites',
     'storages',
-    'django_celery_beat',
-    'django_celery_results',
-    'extra_views',
 ]
 
 MIDDLEWARE = [

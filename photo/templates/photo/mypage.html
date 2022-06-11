@@ -22,7 +22,6 @@
 {% block title %}- {{this_user.tag}}{% endblock %}
 
 {% block content %}
-{% load static %}
     <div class="profile p-3">
         <div class="col-md-2"></div>
         <div class="col-md-3">
@@ -33,7 +32,6 @@
             {% if user.get_username == this_user.get_username %}
             <a href="{% url 'accounts:user_update' user_id=user.email %}" class="btn btn-xs btn-success">프로필 변경</a>
             {% else %}
-
                 {% if followed %}
                 <form action="{% url 'photo:unfollowing' pk=followed.id %}" method="post">
                 {% else %}
