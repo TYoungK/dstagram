@@ -4,4 +4,5 @@
 __pycache__
 db.sqlite3
 .DS_Store
+.idea/
 config/secret_key.py
