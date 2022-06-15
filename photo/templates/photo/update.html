@@ -4,15 +4,112 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8 panel panel-default">
-        <form action="" method="post" enctype="multipart/form-data">
-            {{form.as_p}}
+<div class="lg:w-8/12 lg:mx-auto mb-8">
+    <div class="flex flex-wrap items-center justify-center p-4 md:py-8 bg-white">
+        <form id="form-container" action="" method="post" enctype="multipart/form-data" onsubmit="disable_on_click()">
             {% csrf_token %}
-            <input type="submit" class="btn btn-primary" value="Update">
+            <div class="border border-gray-400">
+                {{form.text}}
+            </div>
+            {{photos.management_form}}
+            {% for form in photos %}
+            <div class="image-form mt-3" seq="0">
+                {{form.photo}}<button class="delBtn bg-blue-500 px-2 py-1 font-semibold text-sm block text-center sm:inline-block block" type="button" onclick="deleteForm(this)">X</button>
+                <hr>
+            </div>
+            {% endfor %}
+            <button class="inline-block text-blue-400 font-semibold text-sm my-5" id="add-form" type="button">Add Another Image</button><br>
+            <input class="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block" type="submit" id="submit-btn" value="Upload">
         </form>
     </div>
-    <div class="col-md-2"></div>
 </div>
+<script>
+    let imgForm = document.querySelectorAll(".image-form");
+    let container = document.querySelector("#form-container");
+    let addButton = document.querySelector("#add-form");
+    let totalForms = document.querySelector("#id_user_photos-TOTAL_FORMS");
+    let formNum = Number(document.querySelector("#id_user_photos-INITIAL_FORMS").getAttribute("value"))-1;
+
+    addButton.addEventListener('click', addForm);
+    function addForm(e){
+        if(formNum>8){
+            alert("한번에 최대 10개의 파일만 가능합니다.");
+            return false;
+        }
+        e.preventDefault();
+
+        let newForm = imgForm[0].cloneNode(false);
+        let children = Array.from(imgForm[0].childNodes).slice(6);
+        newForm.appendChild(imgForm[0].childNodes[1].cloneNode(true));
+        for(child of children){
+            newForm.appendChild(child.cloneNode(true));
+        }
+        
+        let formRegex = RegExp(`photos-(\\d){1}-`,'g');
+
+        formNum++;
+        newForm.setAttribute('seq', formNum);
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `photos-${formNum}-`);
+        console.log(newForm);
+        container.insertBefore(newForm, addButton);
+        
+        totalForms.setAttribute('value', `${formNum+1}`);
+    }
+    function deleteForm(e){
+        if(formNum<1){
+            alert("하나 이상의 파일은 필수입니다.");
+            return false;
+        }
+
+        let formRegex = RegExp(`photos-(\\d){1}-`,'g');
+        formNum--;
+        var seq = Number(e.parentNode.getAttribute('seq'));
+        imgForm = document.querySelectorAll(".image-form");
+        for(var i=seq+1; i<formNum+2; i++){
+            imgForm[i].setAttribute('seq', i-1);
+            imgForm[i].innerHTML = imgForm[i].innerHTML.replace(formRegex, `photos-${i-1}-`);
+        }
+
+        e.parentNode.remove();
+        
+        totalForms.setAttribute('value', `${formNum+1}`);
+    }
+    function disable_on_click() {
+        var element = document.getElementById('submit-btn');
+        element.setAttribute("disabled", "true");
+        if(check_file()){
+            return true;
+        }
+        else{
+            element.removeAttribute("disabled");
+            return false;
+        }
+    }
+    function check_file(){
+        imgForm = document.querySelectorAll(".image-form");
+        for(var i=0; i<formNum+1; i++){
+            let filetag = document.getElementById("id_user_photos-"+ i +"-photo");
+            let atag = imgForm[i].getElementsByTagName("a").length;
+            if(!atag){
+                if(filetag.files.length){
+                    console.log("a NO,file OK: " + i);
+                }
+                else{
+                    alert("추가할 파일을 선택해주세요.");
+                    return false;
+                }
+            }
+            // if(atag){
+            //     if(imgForm[i].getElementsByTagName('input')[1].checked){
+            //         console.log("checked: " + i);
+            //     }
+            //     else{
+            //         console.log("unchecked: " + i);
+            //     }
+            // }
+            
+        }
+        return true;
+    }
+</script>
 {% endblock %}

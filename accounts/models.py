@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
             phone_num=phone_num,
             name="관리자",
             birth_date="1999-11-11",
-            profile_pic="",
+            profile_pic="profile_pic/base/default_user_icon.png",
             self_intro="I'm Admin",
         )
         user.is_admin = True
@@ -54,7 +54,7 @@ class User(AbstractUser):
     name = models.CharField(blank=False, default="", max_length=50)
     tag = models.CharField(blank=False, unique=True, max_length=25)
     birth_date = models.DateField()
-    profile_pic = models.ImageField(storage=ProfileStorage(), upload_to=profile_pic_upload, default='profile_pic/base/empty_user_icon.png')
+    profile_pic = models.ImageField(storage=ProfileStorage(), upload_to=profile_pic_upload, default='profile_pic/base/default_user_icon.png')
     self_intro = models.CharField(blank=True, max_length=255)
     regex = RegexValidator(regex=r'^01([0|1|6|7|8|9]?)([0-9]{3,4})([0-9]{4})$')
     phone_num = models.CharField(validators=[regex], max_length=11, unique=True)
@@ -63,6 +63,9 @@ class User(AbstractUser):
     created = models.DateTimeField(auto_now_add=True)
     objects = UserManager()
 
+    username = None
+    first_name = None
+    last_name = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['tag', 'phone_num']
 

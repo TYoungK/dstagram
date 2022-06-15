@@ -3,12 +3,10 @@
 {% block title %}- Registration Done{% endblock %}
 
 {% block content %}
-<div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8 panel panel-default">
-            <div class="alert alert-info">Registration Success. Welcome, {{new_user.username}}</div>
-            <a class="btn btn-info" href="/">Move to main</a>
-        </div>
-        <div class="col-md-2"></div>
+<div class="lg:w-8/12 lg:mx-auto mb-8">
+    <div class="flex flex-wrap items-center justify-center p-4 md:py-8 bg-white">
+        <div class="block text-gray-700 text-sm font-bold mb-2">{{new_user.name}}님 가입을 환영합니다. </div>
+        <a class="my-5 bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block" href="/">Move to main</a>
+    </div>
 </div>
 {% endblock %}

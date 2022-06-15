@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-<script src="{% static 'public/js/splide.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'public/css/splide.min.css' %}">
+
 <script>
+    
+    
     function setSplide(cnt){
         var elms = document.getElementsByClassName( 'splide' );
         var start = (Number(document.getElementById('load_next').getAttribute('data'))-1)*10;
@@ -17,94 +18,308 @@
     document.addEventListener( 'DOMContentLoaded', function() {
         setSplide({{posts|length}});
     });
+
+
 </script>
 {% endblock %}
 {% block title %}- {{this_user.tag}}{% endblock %}
 
 {% block content %}
-    <div class="profile p-3">
-        <div class="col-md-2"></div>
-        <div class="col-md-3">
-            <img class="profile-pic" src="{{this_user.profile_pic.url}}">
+<div class="lg:w-8/12 lg:mx-auto mb-8">
+    <div class="flex flex-wrap items-center p-4 md:py-8">
+        <div class="md:w-3/12 md:ml-16">
+        <!-- profile image -->
+        <img class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
+                    border-2 border-pink-600 p-1" src="{{this_user.profile_pic.url}}" alt="profile">
         </div>
-        <div class="col-md-5">
-            {{ this_user.tag }}
+
+        <!-- profile meta -->
+        <div class="w-8/12 md:w-7/12 ml-4">
+        <div class="md:flex md:flex-wrap md:items-center mb-4">
+            <h2 class="text-3xl inline-block font-light md:mr-2 mb-2 sm:mb-0">
+                {{this_user.tag}}
+            </h2>
             {% if user.get_username == this_user.get_username %}
-            <a href="{% url 'accounts:user_update' user_id=user.email %}" class="btn btn-xs btn-success">프로필 변경</a>
+            <a href="{% url 'accounts:user_update' user_id=user.email %}" 
+            class="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
+                프로필 변경
+            </a>
+            <button type="button" data-modal-toggle="follow-modal" class="font-semibold px-2 py-1 block text-center sm:inline-block block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" viewBox="0 0 24 24" width="24px" height="24px">
+                    <path d="M 9.6679688 2 L 9.1757812 4.5234375 C 8.3550224 4.8338012 7.5961042 5.2674041 6.9296875 5.8144531 L 4.5058594 4.9785156 L 2.1738281 9.0214844 L 4.1132812 10.707031 C 4.0445153 11.128986 4 11.558619 4 12 C 4 12.441381 4.0445153 12.871014 4.1132812 13.292969 L 2.1738281 14.978516 L 4.5058594 19.021484 L 6.9296875 18.185547 C 7.5961042 18.732596 8.3550224 19.166199 9.1757812 19.476562 L 9.6679688 22 L 14.332031 22 L 14.824219 19.476562 C 15.644978 19.166199 16.403896 18.732596 17.070312 18.185547 L 19.494141 19.021484 L 21.826172 14.978516 L 19.886719 13.292969 C 19.955485 12.871014 20 12.441381 20 12 C 20 11.558619 19.955485 11.128986 19.886719 10.707031 L 21.826172 9.0214844 L 19.494141 4.9785156 L 17.070312 5.8144531 C 16.403896 5.2674041 15.644978 4.8338012 14.824219 4.5234375 L 14.332031 2 L 9.6679688 2 z M 12 8 C 14.209 8 16 9.791 16 12 C 16 14.209 14.209 16 12 16 C 9.791 16 8 14.209 8 12 C 8 9.791 9.791 8 12 8 z"/>
+                </svg>
+            </button>
+            
             {% else %}
                 {% if followed %}
-                <form action="{% url 'photo:unfollowing' pk=followed.id %}" method="post">
+                <form action="{% url 'photo:unfollow' pk=followed.id %}" method="post">
                 {% else %}
-                <form action="{% url 'photo:following' user_tag=this_user.get_username %}" method="post">
+                <form action="{% url 'photo:follow' user_tag=this_user.tag %}" method="post">
                 {% endif %}
                     {% csrf_token %}
                     <input type="hidden" name="user" value="{{user.id}}">
                     <input type="hidden" name="follow" value="{{this_user.id}}">
-                    <input type="hidden" name="followname" value="{{this_user.get_username}}">
+                    <input type="hidden" name="followname" value="{{this_user.tag}}">
                     {% if followed %}
-                    <input type="submit" class="btn btn-primary" value="팔로우 취소">
+                    <input id="btn-follow" type="submit" class="bg-blue-500 px-2 py-1 
+                        text-white font-semibold text-sm rounded block text-center 
+                        sm:inline-block block" value="팔로우 취소">
                     {% else %}
-                    <input type="submit" class="btn btn-primary" value="팔로우">
+                    <input id="btn-follow" type="submit" class="bg-blue-500 px-2 py-1 
+                        text-white font-semibold text-sm rounded block text-center 
+                        sm:inline-block block" value="팔로우">
                     {% endif %}
                 </form>
             {% endif %}
-            </br>
-            {{this_user.self_intro}}
+            
+            
         </div>
-        <div class="col-md-2"></div>
-    </div>
 
-    <div class="rows">
-        {% for post in posts %}
-        <div class="row mt-3">
-            <div class="col-md-2"></div>
-            <div class="col-md-8 panel panel-default">
-                <p>
-                    <section class="splide" aria-label="Splide Basic HTML Example">
-                        <div class="splide__track">
-                                <ul class="splide__list">
-                                    {% for photo in post.user_photos.all %}
-                                    <li class="splide__slide">
-                                        <img src="{{photo.photo.url}}" style="width:100%;">
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                        </div>
-                      </section>
-                </p>
-                <p>
-                    <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}" class="btn btn-xs">
-                        {{post.author.tag}}
+        <!-- post, following, followers list for medium screens -->
+        <ul class="hidden md:flex space-x-8 mb-4">
+            <li>
+            <span class="font-semibold">{{posts|length}}</span>
+            게시글
+            </li>
+            <li class="cursor-pointer" onclick="getFollowers('{{this_user.tag}}')">
+            <span class="font-semibold">{{followers}}</span>
+            팔로워
+            </li>
+            <li class="cursor-pointer" onclick="getFollowings('{{this_user.tag}}')">
+            <span class="font-semibold">{{followings}}</span>
+            팔로잉
+            </li>
+        </ul>
+
+        <!-- user meta form medium screens -->
+        <div class="hidden md:block">
+            <h1 class="font-semibold">{{this_user.tag}}</h1>
+            <span>{{this_user.self_intro}}</span>
+        </div>
+
+        </div>
+
+        <!-- user meta form small screens -->
+        <div class="md:hidden text-sm my-2">
+        <h1 class="font-semibold">Mr Travlerrr...</h1>
+        <span>{{this_user.self_intro}}</span>
+        </div>
+
+    </div>
+</div>
+<ul class="flex items-center justify-around md:justify-center space-x-12 uppercase tracking-widest font-semibold text-xs text-gray-600">
+    <li class="md:border-b md:border-gray-700 md:-mt-px md:text-gray-700">
+        <a class="inline-block p-3" href="#">
+            <i class="fas fa-th-large text-xl md:text-xs"></i>
+            <span class="hidden md:inline">post</span>
+        </a>
+    </li>
+</ul>
+<div class="container mx-auto px-20 border-t">
+    {% for post in posts %}
+    <div class="p-3 px-6 min-h-48 flex justify-center items-center" style="cursor: auto;">
+        <custom-card3>
+            <div class="rounded-md shadow-md sm:w-[470px] bg-coolGray-900 text-coolGray-100 border">
+                <div class="flex items-center justify-between p-3" style="cursor: auto;">
+                <div class="flex items-center space-x-2" style="cursor: auto;">
+                    <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">
+                        <img src="{{post.author.profile_pic.url}}" alt="" class="object-cover object-center w-8 h-8 rounded-full shadow-sm bg-coolGray-500 border-coolGray-700" style="cursor: auto;">
                     </a>
-                </p>
-                <p>{{post.text|linebreaksbr}}</p>
-                {% if post.bool_like %}
-                    <a href="javascript:;" onclick="unlike_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-like.png' %}"></a>
-                {% else %}
-                    <a href="javascript:;" onclick="like_photo(this,'{{post.id}}')"><img src="{% static 'admin/img/icon-unlike.png' %}"></a>
-                {% endif %}
-
-                <span class="like_count">{{post.num_like}}</span>
-                <p class="text-right">
-                    <a href="{% url 'photo:photo_detail' pk=post.id %}" class="btn btn-xs">댓글달기</a>
-                </p>
+                    <div class="-space-y-1" style="cursor: auto;">
+                    <h2 class="text-sm font-semibold leading-none" style="cursor: auto;">
+                        <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">
+                            {{post.author.tag}}
+                        </a>
+                    </h2>
+                    <!-- <span class="inline-block text-xs leading-none text-coolGray-400" style="cursor: auto;">New York City</span> -->
+                    </div>
+                </div>
+                <button title="Open options" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 fill-current" style="cursor: auto;">
+                    <path d="M256,144a64,64,0,1,0-64-64A64.072,64.072,0,0,0,256,144Zm0-96a32,32,0,1,1-32,32A32.036,32.036,0,0,1,256,48Z"></path>
+                    <path d="M256,368a64,64,0,1,0,64,64A64.072,64.072,0,0,0,256,368Zm0,96a32,32,0,1,1,32-32A32.036,32.036,0,0,1,256,464Z"></path>
+                    <path d="M256,192a64,64,0,1,0,64,64A64.072,64.072,0,0,0,256,192Zm0,96a32,32,0,1,1,32-32A32.036,32.036,0,0,1,256,288Z"></path>
+                    </svg>
+                </button>
+                </div>
+                <section class="splide" aria-label="Splide Basic HTML Example">
+                    <div class="splide__track">
+                            <ul class="splide__list">
+                                {% for photo in post.user_photos.all %}
+                                <li class="splide__slide">
+                                    <!-- <img src="{{photo.photo.url}}" style="width:100%;"> -->
+                                    <img src="{{photo.photo.url}}" alt="" class="object-cover object-center w-full bg-coolGray-500" style="cursor: auto;">
+                                </li>
+                                {% endfor %}
+                            </ul>
+                    </div>
+                </section>
+                <div class="p-3" style="cursor: auto;">
+                <div class="flex items-center justify-between" style="cursor: auto;">
+                    <div class="flex items-center space-x-3">
+                        <button type="button" title="Like post" class="flex items-center justify-center">
+                            {% if post.bool_like %}
+                            <a href="javascript:;" class="w-5 h-5 fill-current" onclick="unlike_photo(this,'{{post.id}}')">
+                                <img src="{% static 'public/images/icon_like.svg' %}">
+                            </a>
+                            {% else %}
+                            <a href="javascript:;" class="w-5 h-5 fill-current" onclick="like_photo(this,'{{post.id}}')">
+                                <img src="{% static 'public/images/icon_unlike.svg' %}">
+                            </a>
+                            {% endif %}
+                        </button>
+                    <button type="button" title="Add a comment" class="flex items-center justify-center">
+                        <a href="{% url 'photo:photo_detail' pk=post.id %}" class="btn btn-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 fill-current">
+                            <path d="M496,496H480a273.39,273.39,0,0,1-179.025-66.782l-16.827-14.584C274.814,415.542,265.376,416,256,416c-63.527,0-123.385-20.431-168.548-57.529C41.375,320.623,16,270.025,16,216S41.375,111.377,87.452,73.529C132.615,36.431,192.473,16,256,16S379.385,36.431,424.548,73.529C470.625,111.377,496,161.975,496,216a171.161,171.161,0,0,1-21.077,82.151,201.505,201.505,0,0,1-47.065,57.537,285.22,285.22,0,0,0,63.455,97L496,457.373ZM294.456,381.222l27.477,23.814a241.379,241.379,0,0,0,135,57.86,317.5,317.5,0,0,1-62.617-105.583v0l-4.395-12.463,9.209-7.068C440.963,305.678,464,262.429,464,216c0-92.636-93.309-168-208-168S48,123.364,48,216s93.309,168,208,168a259.114,259.114,0,0,0,31.4-1.913Z"></path>
+                            </svg>
+                        </a>
+                    </button>
+                    <button type="button" title="Share post" class="flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 fill-current">
+                        <path d="M474.444,19.857a20.336,20.336,0,0,0-21.592-2.781L33.737,213.8v38.066l176.037,70.414L322.69,496h38.074l120.3-455.4A20.342,20.342,0,0,0,474.444,19.857ZM337.257,459.693,240.2,310.37,389.553,146.788l-23.631-21.576L215.4,290.069,70.257,232.012,443.7,56.72Z"></path>
+                        </svg>
+                    </button>
+                    </div>
+                    <button type="button" title="Bookmark post" class="flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 fill-current">
+                        <path d="M424,496H388.75L256.008,381.19,123.467,496H88V16H424ZM120,48V456.667l135.992-117.8L392,456.5V48Z"></path>
+                    </svg>
+                    </button>
+                </div>
+                <div class="flex flex-wrap items-center pt-3 pb-1" style="cursor: auto;">
+                    <div class="flex items-center space-x-2">
+                    <!-- <div class="flex -space-x-1">
+                        <img alt="" class="w-5 h-5 border rounded-full bg-coolGray-500 border-coolGray-800" src="https://stackdiary.com/140x100.png">
+                        <img alt="" class="w-5 h-5 border rounded-full bg-coolGray-500 border-coolGray-800" src="https://stackdiary.com/140x100.png">
+                        <img alt="" class="w-5 h-5 border rounded-full bg-coolGray-500 border-coolGray-800" src="https://stackdiary.com/140x100.png">
+                    </div> -->
+                    <span class="text-sm">
+                        <span id="like_count{{post.id}}" class="font-semibold">
+                            {{post.num_like}}명이 좋아합니다.
+                        </span>
+                    </span>
+                    </div>
+                </div>
+                <div class="space-y-3" style="cursor: auto;">
+                    <p class="text-sm" style="cursor: auto;">
+                    <span class="text-base font-semibold">
+                        <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">
+                            {{post.author.tag}}
+                        </a>
+                    </span>
+                    {{post.text|linebreaksbr}}
+                    </p>
+                    <!-- <input type="text" placeholder="Add a comment..." class="w-full py-0.5 bg-transparent border-none rounded text-sm pl-0 text-coolGray-100" style="cursor: auto;"> -->
+                </div>
+                </div>
             </div>
-            <div class="col-md-2"></div>
-        </div>
-
-    {% endfor %}
+        </custom-card3>
     </div>
-
-    <div class="row">
-        <div class="col-md-2"></div>
-            <div class="col-md-8 panel panel-default">
+    {% endfor %}
+    <div class="p-3 px-6 min-h-48 flex justify-center items-center" style="cursor: auto;"></div>
+        <custom-card3>
+            <div class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 {% if posts %}
                 <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
                 {% else %}
-                <p>게시물이 없습니다.</p>
+                <p>피드가 없습니다.</p>
+                <p>다른 사람을 팔로우 해보세요!</p>
                 {% endif %}
             </div>
-        <div class="col-md-2"></div>
+        </custom-card3>
     </div>
+</div>
 
+<!--Modal -->
+<div id="follow-modal" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center hidden" onclick="hideModal()">
+    <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" onclick="hideModal()">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+            </button>
+            <!-- Modal header -->
+            <div class="py-4 px-6 rounded-t border-b dark:border-gray-600">
+                <h3 class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
+                    Header
+                </h3>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6">
+                <ul id="follow_list" class="my-4 space-y-3">
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let modal=document.getElementById('follow-modal');
+    function disable_on_click() {
+        var element = document.getElementById('submit-btn');
+        element.setAttribute("disabled", "disabled");
+    }
+    function getFollowers(user_tag){
+        let xhr = new XMLHttpRequest();
+        xhr.onload = ()=>{
+            if (xhr.status === 200) {
+            followers = JSON.parse(xhr.responseText);
+            $('#follow_list').html('');
+            console.log(followers);
+            for(var follower of followers){
+                $('#follow_list').append(
+                    '<li>'+
+                    '<a href="/mypage/' + follower.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white z-[60]">'+
+                    '<img class="w-10 h-10 rounded-full" src='+ follower.profile_pic +'>'+
+                    '<span class="flex-1 ml-3 whitespace-nowrap">'+
+                    follower.tag+
+                    '</span>'+
+                    '</a>'+
+                    '</li>'
+                    );
+            }
+            
+            
+            modal.classList.replace('hidden', 'flex');
+        }
+        };
+        xhr.open('GET', '/follower/' + user_tag);
+        xhr.send();
+    }
+
+    function getFollowings(user_tag){
+        let xhr = new XMLHttpRequest();
+        xhr.onload = ()=>{
+            if (xhr.status === 200) {
+            followers = JSON.parse(xhr.responseText);
+            $('#follow_list').html('');
+            console.log(followers);
+            for(var follower of followers){
+                $('#follow_list').append(
+                    '<li>'+
+                    '<a href="/mypage/' + follower.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
+                    '<img class="w-10 h-10 object-cover rounded-full p-1" src='+ follower.profile_pic +'>'+
+                    '<span class="flex-1 ml-3 whitespace-nowrap">'+
+                    follower.tag+
+                    '</span>'+
+                    '</a>'+
+                    '</li>'
+                    );
+            }
+            
+            
+            modal.classList.replace('hidden', 'flex');
+        }
+        };
+        xhr.open('GET', '/following/' + user_tag);
+        xhr.send();
+    }
+
+    function hideModal(){
+        modal.classList.replace('flex', 'hidden');
+    }
+</script>
 {% endblock %}

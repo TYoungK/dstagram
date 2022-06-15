@@ -33,7 +33,8 @@ def register(request):
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit = False)
-            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.set_password(user_form.cleaned_data['password1'])
+            new_user.profile_pic = request.FILES.get('profile_pic')
             new_user.save()
             return render(request, 'registration/register_done.html', {'new_user': new_user})
     else:

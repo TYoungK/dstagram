@@ -4,15 +4,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8 panel panel-default">
-        <form action="" method="post" enctype="multipart/form-data">
-            {{form.as_p}}
+<div class="lg:w-8/12 lg:mx-auto mb-8">
+    <div class="flex flex-wrap items-center justify-center p-4 md:py-8 bg-white">
+        <form class="items-center justify-center bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="" method="post" enctype="multipart/form-data" onsubmit="disable_on_click()">
             {% csrf_token %}
-            <input type="submit" class="btn btn-primary" value="Update">
+            {% for f in form %}
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{f.name}}">
+                {{f.name}}
+                {% if forloop.counter == 2 %}
+                (ex. 0000-00-00)
+                {% endif %}
+            </label>
+            <div id="{{f.name}}" class="mb-3 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline block">
+                {{f}}
+            </div>
+            {% endfor%}
+            <input class="my-5 bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block" type="submit" id="submit-btn" value="저장">
         </form>
     </div>
-    <div class="col-md-2"></div>
 </div>
+<script>
+    function disable_on_click() {
+        var element = document.getElementById('submit-btn');
+        element.setAttribute("disabled", "disabled");
+    }
+    for(el of document.getElementsByTagName('input')){
+        el.classList.add('w-full');
+    }
+</script>
 {% endblock %}

@@ -1,4 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<script src="{% static 'public/js/splide.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'public/css/splide.min.css' %}">
+<script>
+    function setSplide(cnt){
+        var elms = document.getElementsByClassName( 'splide' );
+        var next=document.getElementById('load_next');
+        var start = 0;
+        if (next!=null){
+            var start = (Number(next.getAttribute('data'))-1)*10;
+        }
+        for (var i=start; i<start+cnt; i++){
+            var splide = new Splide( elms[i] ).mount();
+            if(splide.length<2){
+                splide.options = {arrows:false};
+            }
+        }   
+    }
+    document.addEventListener( 'DOMContentLoaded', function() {
+        setSplide(1);
+    });
+</script>
+{% endblock %}
 {% block title %}
     {{object.text|truncatechars:10}}
 {% endblock %}
@@ -7,14 +31,24 @@
     <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8 panel panel-default">
-                <p><img src="{{object.photo.url}}" style="width:100%;"></p>
-                <button type="button" class="btn btn-outline-primary btn-sm">
-                    {{object.author.username}}</button>
-                <p>{{object.text|linebreaksbr}}</p>
-
-                <a href="{% url 'photo:photo_delete' pk=object.id %}" class="btn btn-outline-danger btn-sm float-right">
+                <p>
+                    <section class="splide" aria-label="Splide Basic HTML Example">
+                        <div class="splide__track">
+                                <ul class="splide__list">
+                                    {% for photo in photos %}
+                                    <li class="splide__slide">
+                                        <img src="{{photo.photo.url}}" style="width:100%;">
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                        </div>
+                      </section>
+                </p>
+                <p>{{post.text|linebreaksbr}}</p>
+                <a class="btn btn-xs" href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">{{post.author.tag}}</a>
+                <a href="{% url 'photo:photo_delete' pk=post.id %}" class="btn btn-outline-danger btn-sm float-right">
                     Delete</a>
-                <a href="{% url 'photo:photo_update' pk=object.id %}" class="btn btn-outline-success btn-sm float-right">
+                <a href="{% url 'photo:photo_update' pk=post.id %}" class="btn btn-outline-success btn-sm float-right">
                     Update</a>
             </div>
             <div class="col-md-2"></div>

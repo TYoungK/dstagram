@@ -1,0 +1,10 @@
+{% extends 'base.html'%}
+{% block title%}- Login {% endblock %}
+{% block content%}
+<div class="flex lg:w-8/12 lg:mx-auto mb-8 items-center justify-center">
+  <div class="items-center justify-center p-4 md:py-8 bg-white">
+    <div class="block text-gray-700 text-sm font-bold mb-2">로그아웃 되었습니다.</div>
+    <a class="my-5 bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block" href="{% url 'accounts:login' %}">로그인 화면으로</a>
+  </div>
+</div>
+{% endblock %}
