@@ -140,11 +140,11 @@
                             //console.log(req);
                             let data = req.response;
                             //console.log(data);
-                            let rows = $(data).find('.row');
+                            let rows = $(data).find('.post');
                             //console.log(rows.length);
                             if(rows.length > 0){
                                 for(var i=0;i<rows.length-1;i++){
-                                    document.querySelector('.rows').appendChild(rows[i]);
+                                    document.querySelector('.post').appendChild(rows[i]);
                                 }
                                 $(this).attr('data',Number($(this).attr('data'))+1);
                                 setSplide(rows.length-1);
@@ -270,7 +270,7 @@
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <div class="py-4 px-6 rounded-t border-b dark:border-gray-600">
                     <h3 class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
-                        검색결과
+                        
                     </h3>
                 </div>
                 <!-- Modal body -->

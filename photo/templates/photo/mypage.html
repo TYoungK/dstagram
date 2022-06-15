@@ -101,7 +101,7 @@
 
         <!-- user meta form small screens -->
         <div class="md:hidden text-sm my-2">
-        <h1 class="font-semibold">Mr Travlerrr...</h1>
+        <h1 class="font-semibold">{{this_user.tag}}</h1>
         <span>{{this_user.self_intro}}</span>
         </div>
 
@@ -117,7 +117,7 @@
 </ul>
 <div class="container mx-auto px-20 border-t">
     {% for post in posts %}
-    <div class="p-3 px-6 min-h-48 flex justify-center items-center" style="cursor: auto;">
+    <div class="p-3 px-6 min-h-48 flex justify-center items-center post" style="cursor: auto;">
         <custom-card3>
             <div class="rounded-md shadow-md sm:w-[470px] bg-coolGray-900 text-coolGray-100 border">
                 <div class="flex items-center justify-between p-3" style="cursor: auto;">
@@ -221,7 +221,9 @@
         <custom-card3>
             <div class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 {% if posts %}
-                <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+                    {% if posts.count == 10 %}
+                        <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+                    {% endif %}
                 {% else %}
                 <p>피드가 없습니다.</p>
                 <p>다른 사람을 팔로우 해보세요!</p>
@@ -241,8 +243,8 @@
             </button>
             <!-- Modal header -->
             <div class="py-4 px-6 rounded-t border-b dark:border-gray-600">
-                <h3 class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
-                    Header
+                <h3 id="follow-modal-header" class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
+                    팔로우
                 </h3>
             </div>
             <!-- Modal body -->
@@ -258,6 +260,7 @@
 
 <script>
     let modal=document.getElementById('follow-modal');
+    let modal_header=documnet.getElementById('follow-modal-header');
     function disable_on_click() {
         var element = document.getElementById('submit-btn');
         element.setAttribute("disabled", "disabled");
@@ -282,7 +285,7 @@
                     );
             }
             
-            
+            modal_header.innerHTML = "팔로워";
             modal.classList.replace('hidden', 'flex');
         }
         };
@@ -310,7 +313,7 @@
                     );
             }
             
-            
+            modal_header.innerHTML = "팔로잉";
             modal.classList.replace('hidden', 'flex');
         }
         };
