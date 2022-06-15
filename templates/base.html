@@ -238,7 +238,7 @@
             <div class="flex space-x-4 items-center justify-center">
                 <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_upload' %}">Upload</a>
                 <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_list_user' user_tag=user.tag%}">
-                    <img class="w-10 h-10 object-cover rounded-full p-1" src="{{user.profile_pic}}">
+                    <img class="w-10 h-10 object-cover rounded-full p-1" src="{{user.profile_pic.url}}">
                 </a>
                 <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'accounts:logout' %}">Logout</a>
             </div>
