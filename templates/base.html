@@ -104,18 +104,24 @@
                             if(req.status === 200) {
                                 var users = JSON.parse(req.responseText);
                                 $('#search_list').html('');
-                                for(var user of users){
-                                    $('#search_list').append(
-                                        '<li>'+
-                                        '<a href="/mypage/' + user.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
-                                        '<img class="w-10 h-10 rounded-full" src='+ user.profile_pic +'>'+
-                                        '<span class="flex-1 ml-3 whitespace-nowrap">'+
-                                            user.tag+
-                                        '</span>'+
-                                        '</a>'+
-                                        '</li>'
-                                    );
+                                if(users.length){
+                                    for(var user of users){
+                                        $('#search_list').append(
+                                            '<li>'+
+                                            '<a href="/mypage/' + user.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
+                                            '<img class="w-10 h-10 rounded-full" src='+ user.profile_pic +'>'+
+                                            '<span class="flex-1 ml-3 whitespace-nowrap">'+
+                                                user.tag+
+                                            '</span>'+
+                                            '</a>'+
+                                            '</li>'
+                                        );
+                                    }   
                                 }
+                                else{
+                                    $('#search_list').append("검색 결과가 없습니다.")
+                                }
+                                
                                 
                             }
                         }
