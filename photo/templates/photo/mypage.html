@@ -260,7 +260,7 @@
 
 <script>
     let modal=document.getElementById('follow-modal');
-    let modal_header=documnet.getElementById('follow-modal-header');
+    let modal_header=document.getElementById('follow-modal-header');
     function disable_on_click() {
         var element = document.getElementById('submit-btn');
         element.setAttribute("disabled", "disabled");
@@ -271,7 +271,6 @@
             if (xhr.status === 200) {
             followers = JSON.parse(xhr.responseText);
             $('#follow_list').html('');
-            console.log(followers);
             for(var follower of followers){
                 $('#follow_list').append(
                     '<li>'+
@@ -299,7 +298,6 @@
             if (xhr.status === 200) {
             followers = JSON.parse(xhr.responseText);
             $('#follow_list').html('');
-            console.log(followers);
             for(var follower of followers){
                 $('#follow_list').append(
                     '<li>'+
