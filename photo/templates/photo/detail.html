@@ -44,12 +44,29 @@
                         </div>
                       </section>
                 </p>
-                <p>{{post.text|linebreaksbr}}</p>
-                <a class="btn btn-xs" href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">{{post.author.tag}}</a>
-                <a href="{% url 'photo:photo_delete' pk=post.id %}" class="btn btn-outline-danger btn-sm float-right">
-                    Delete</a>
-                <a href="{% url 'photo:photo_update' pk=post.id %}" class="btn btn-outline-success btn-sm float-right">
-                    Update</a>
+                <div style="cursor: auto;"> <!-- class="space-y-3" -->
+                    <p class="text-sm" style="cursor: auto;">
+                    <span class="text-base font-semibold">
+                        <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">
+                            {{post.author.tag}}
+                        </a>
+                    </span>
+                    {{post.text|linebreaksbr}}
+                    <a href="{% url 'photo:photo_update' pk=post.id %}" class="bg-green-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
+                        Update</a>
+                    <a href="{% url 'photo:photo_delete' pk=post.id %}" class="bg-red-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
+                        Delete</a>
+                    </p>
+                    <p class="text-xs" style="cursor: auto;">
+                        <span class="text-[13px]">
+                            <a href="{% url 'photo:photo_detail' pk=post.id %}">
+                                <time datetime="{{post.updated}}">{{post.updated.year}}년 {{post.updated.month}}월 {{post.updated.day}}일</time>
+                            </a>
+                        </span>
+                    </p>
+                    <!-- <input type="text" placeholder="Add a comment..." class="w-full py-0.5 bg-transparent border-none rounded text-sm pl-0 text-coolGray-100" style="cursor: auto;"> -->
+                </div>
+                
             </div>
             <div class="col-md-2"></div>
     </div>
