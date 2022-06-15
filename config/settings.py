@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 import sys
-from .secret_key import *
+# from .secret_key import *
 
 sys.modules['django.utils.six.moves.urllib.parse'] = __import__('six.moves.urllib.parse', fromlist=['urlencode'])
 sys.modules['django.utils.six.moves.urllib.request'] = __import__('six.moves.urllib.request', fromlist=['urlopen'])
@@ -26,8 +26,8 @@ AUTH_USER_MODEL = 'accounts.User'
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = django_key
-# SECRET_KEY = os.environ['DJANGO_KEY']
+# SECRET_KEY = django_key
+SECRET_KEY = os.environ['DJANGO_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messagitges.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
@@ -149,12 +149,12 @@ LOGIN_REDIRECT_URL = '/'
 DISQUS_WEBSITE_SHORTNAME = 'dstagram-tyk'
 SITE_ID = 1
 
-AWS_ACCESS_KEY_ID = AWS_KEYS.access_key_id
-AWS_SECRET_ACCESS_KEY = AWS_KEYS.secret_access_key
+# AWS_ACCESS_KEY_ID = AWS_KEYS.access_key_id
+# AWS_SECRET_ACCESS_KEY = AWS_KEYS.secret_access_key
 
 # 헤로쿠 업로드용
-# AWS_ACCESS_KEY_ID = os.environ['S3_ACCESS_KEY']
-# AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET_KEY']
+AWS_ACCESS_KEY_ID = os.environ['S3_ACCESS_KEY']
+AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET_KEY']
 
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 'dstagram-tyks'
