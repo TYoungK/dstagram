@@ -2,16 +2,6 @@
 {% load static %}
 {% block head %}
 <script>
-    function setSplide(cnt){
-        var elms = document.getElementsByClassName( 'splide' );
-        var start = (Number(document.getElementById('load_next').getAttribute('data'))-1)*10;
-        for (var i=start; i<start+cnt; i++){
-            var splide = new Splide( elms[i] ).mount();
-            if(splide.length<2){
-                splide.options = {arrows:false};
-            }
-        }   
-    }
     document.addEventListener( 'DOMContentLoaded', function() {
         setSplide({{posts|length}});
     });
@@ -20,7 +10,7 @@
 {% block title %}- List{% endblock %}
 
 {% block content %}
-    <div class="container mx-auto px-20">
+    <div class="container mx-auto px-20 posts">
         {% for post in posts %}
         <div class="p-3 px-6 min-h-48 flex justify-center items-center post" style="cursor: auto;">
             <custom-card3>
@@ -65,11 +55,11 @@
                                 <button type="button" title="Like post" class="flex items-center justify-center">
                                     {% if post.bool_like %}
                                     <a href="javascript:;" class="w-5 h-5 fill-current" onclick="unlike_photo(this,'{{post.id}}')">
-                                        <img src="{% static 'public/images/icon_like.svg' %}">
+                                        <img src="{% static 'images/icon_like.svg' %}">
                                     </a>
                                     {% else %}
                                     <a href="javascript:;" class="w-5 h-5 fill-current" onclick="like_photo(this,'{{post.id}}')">
-                                        <img src="{% static 'public/images/icon_unlike.svg' %}">
+                                        <img src="{% static 'images/icon_unlike.svg' %}">
                                     </a>
                                     {% endif %}
 
@@ -132,17 +122,18 @@
             </custom-card3>
         </div>
         {% endfor %}
-        <div class="p-3 px-6 min-h-48 flex justify-center items-center" style="cursor: auto;"></div>
+        <div class="min-h-48 flex justify-center items-center" style="cursor: auto;">
             <custom-card3>
-                <div class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <div class="group relative w-full flex justify-center border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     {% if posts %}
-                        {% if posts.count == 10 %}
-                        <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+                        {% if posts.count == 9 %}
+                        <button class="py-2 px-4" id="load_next" data="1">Load Next</button>
                         {% endif %}
                     {% else %}
                     <p>피드가 없습니다.</p>
                     <p>다른 사람을 팔로우 해보세요!</p>
                     {% endif %}
+
                 </div>
             </custom-card3>
         </div>

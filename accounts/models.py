@@ -3,7 +3,8 @@ from django.contrib.auth.models import BaseUserManager,AbstractUser
 from django.core.validators import RegexValidator
 from django.urls import reverse
 from config.asset_storage import ProfileStorage
-
+from config.settings import STATIC_URL
+from django_fields import DefaultStaticImageField
 
 class UserManager(BaseUserManager):
     def create_user(self, email, name, tag, birth_date, profile_pic, self_intro, phone_num, password=None):
@@ -33,7 +34,7 @@ class UserManager(BaseUserManager):
             phone_num=phone_num,
             name="관리자",
             birth_date="1999-11-11",
-            profile_pic="profile_pic/base/default_user_icon.png",
+            profile_pic="images/default_user_icon.png",
             self_intro="I'm Admin",
         )
         user.is_admin = True
@@ -43,7 +44,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
 
     def profile_pic_upload(instance, filename):
-        extension=filename.split(".")[-1]
+        extension = filename.split(".")[-1]
         return f'profile_pic/{instance.tag}.{extension}'
 
     email = models.EmailField(
@@ -54,7 +55,8 @@ class User(AbstractUser):
     name = models.CharField(blank=False, default="", max_length=50)
     tag = models.CharField(blank=False, unique=True, max_length=25)
     birth_date = models.DateField()
-    profile_pic = models.ImageField(storage=ProfileStorage(), upload_to=profile_pic_upload, default='profile_pic/base/default_user_icon.png')
+    profile_pic = DefaultStaticImageField(storage=ProfileStorage(), upload_to=profile_pic_upload, blank=True,
+                                          default_image_path='images/default_user_icon.png')
     self_intro = models.CharField(blank=True, max_length=255)
     regex = RegexValidator(regex=r'^01([0|1|6|7|8|9]?)([0-9]{3,4})([0-9]{4})$')
     phone_num = models.CharField(validators=[regex], max_length=11, unique=True)

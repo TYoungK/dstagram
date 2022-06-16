@@ -131,7 +131,7 @@ def photo_list(request): #팔로우 한 유저들의 게시글 로드
     page_num = int(request.POST.get('page_num')) if request.POST.get('page_num') != None else 1
     posts = Post.objects.prefetch_related('user_photos').all()
     follows_post = (posts.filter(author__in=Follow.objects.filter(user=request.user.id).values('follow')) |
-                     posts.filter(author=request.user.id).order_by('-created'))[(page_num-1)*10:page_num*10]
+                     posts.filter(author=request.user.id).order_by('-created'))[(page_num-1)*9:page_num*9]
     follows_post = follows_post.annotate(num_like=Count('like'))\
         .annotate(bool_like=Exists(Like.objects.filter(post=OuterRef('id'), user=request.user.id)))
 
@@ -150,8 +150,7 @@ def photo_list_user(request, user_tag): #특정 유저의 게시글 로드
     if followed_tmp.count():
         followed = followed_tmp[0]
 
-    posts = Post.objects.prefetch_related('user_photos').filter(author=this_user)[(page_num-1)*10:page_num*10-1]
-
+    posts = Post.objects.prefetch_related('user_photos').filter(author=this_user)[(page_num-1)*9:page_num*9]
     return render(request, 'photo/mypage.html',
                   {'posts': posts, 'this_user': this_user,
                    'followers': followers, 'followings': followings, 'followed': followed})

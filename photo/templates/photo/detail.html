@@ -1,23 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-<script src="{% static 'public/js/splide.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'public/css/splide.min.css' %}">
 <script>
-    function setSplide(cnt){
-        var elms = document.getElementsByClassName( 'splide' );
-        var next=document.getElementById('load_next');
-        var start = 0;
-        if (next!=null){
-            var start = (Number(next.getAttribute('data'))-1)*10;
-        }
-        for (var i=start; i<start+cnt; i++){
-            var splide = new Splide( elms[i] ).mount();
-            if(splide.length<2){
-                splide.options = {arrows:false};
-            }
-        }   
-    }
     document.addEventListener( 'DOMContentLoaded', function() {
         setSplide(1);
     });

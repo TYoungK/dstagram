@@ -1,25 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-
 <script>
-    
-    
-    function setSplide(cnt){
-        var elms = document.getElementsByClassName( 'splide' );
-        var start = (Number(document.getElementById('load_next').getAttribute('data'))-1)*10;
-        for (var i=start; i<start+cnt; i++){
-            var splide = new Splide( elms[i] ).mount();
-            if(splide.length<2){
-                splide.options = {arrows:false};
-            }
-        }   
-    }
     document.addEventListener( 'DOMContentLoaded', function() {
         setSplide({{posts|length}});
     });
-
-
 </script>
 {% endblock %}
 {% block title %}- {{this_user.tag}}{% endblock %}
@@ -115,7 +100,7 @@
         </a>
     </li>
 </ul>
-<div class="container mx-auto px-20 border-t">
+<div class="container mx-auto px-20 border-t posts">
     {% for post in posts %}
     <div class="p-3 px-6 min-h-48 flex justify-center items-center post" style="cursor: auto;">
         <custom-card3>
@@ -160,11 +145,11 @@
                         <button type="button" title="Like post" class="flex items-center justify-center">
                             {% if post.bool_like %}
                             <a href="javascript:;" class="w-5 h-5 fill-current" onclick="unlike_photo(this,'{{post.id}}')">
-                                <img src="{% static 'public/images/icon_like.svg' %}">
+                                <img src="{% static 'images/icon_like.svg' %}">
                             </a>
                             {% else %}
                             <a href="javascript:;" class="w-5 h-5 fill-current" onclick="like_photo(this,'{{post.id}}')">
-                                <img src="{% static 'public/images/icon_unlike.svg' %}">
+                                <img src="{% static 'images/icon_unlike.svg' %}">
                             </a>
                             {% endif %}
                         </button>
@@ -217,12 +202,12 @@
         </custom-card3>
     </div>
     {% endfor %}
-    <div class="p-3 px-6 min-h-48 flex justify-center items-center" style="cursor: auto;"></div>
+    <div class="min-h-48 flex justify-center items-center" style="cursor: auto;">
         <custom-card3>
-            <div class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div class="group relative w-full flex justify-center border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 {% if posts %}
-                    {% if posts.count == 10 %}
-                        <button class="btn btn-xs" id="load_next" data="1">Load Next</button>
+                    {% if posts.count == 9 %}
+                        <button class="py-2 px-4" id="load_next" data="1">Load Next</button>
                     {% endif %}
                 {% else %}
                 <p>피드가 없습니다.</p>
@@ -248,7 +233,7 @@
                 </h3>
             </div>
             <!-- Modal body -->
-            <div class="p-6">
+            <div class="p-6 overflow-y-auto max-h-80">
                 <ul id="follow_list" class="my-4 space-y-3">
 
                 </ul>
@@ -257,70 +242,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    let modal=document.getElementById('follow-modal');
-    let modal_header=document.getElementById('follow-modal-header');
-    function disable_on_click() {
-        var element = document.getElementById('submit-btn');
-        element.setAttribute("disabled", "disabled");
-    }
-    function getFollowers(user_tag){
-        let xhr = new XMLHttpRequest();
-        xhr.onload = ()=>{
-            if (xhr.status === 200) {
-            followers = JSON.parse(xhr.responseText);
-            $('#follow_list').html('');
-            for(var follower of followers){
-                $('#follow_list').append(
-                    '<li>'+
-                    '<a href="/mypage/' + follower.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white z-[60]">'+
-                    '<img class="w-10 h-10 rounded-full" src='+ follower.profile_pic +'>'+
-                    '<span class="flex-1 ml-3 whitespace-nowrap">'+
-                    follower.tag+
-                    '</span>'+
-                    '</a>'+
-                    '</li>'
-                    );
-            }
-            
-            modal_header.innerHTML = "팔로워";
-            modal.classList.replace('hidden', 'flex');
-        }
-        };
-        xhr.open('GET', '/follower/' + user_tag);
-        xhr.send();
-    }
-
-    function getFollowings(user_tag){
-        let xhr = new XMLHttpRequest();
-        xhr.onload = ()=>{
-            if (xhr.status === 200) {
-            followers = JSON.parse(xhr.responseText);
-            $('#follow_list').html('');
-            for(var follower of followers){
-                $('#follow_list').append(
-                    '<li>'+
-                    '<a href="/mypage/' + follower.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
-                    '<img class="w-10 h-10 object-cover rounded-full p-1" src='+ follower.profile_pic +'>'+
-                    '<span class="flex-1 ml-3 whitespace-nowrap">'+
-                    follower.tag+
-                    '</span>'+
-                    '</a>'+
-                    '</li>'
-                    );
-            }
-            
-            modal_header.innerHTML = "팔로잉";
-            modal.classList.replace('hidden', 'flex');
-        }
-        };
-        xhr.open('GET', '/following/' + user_tag);
-        xhr.send();
-    }
-
-    function hideModal(){
-        modal.classList.replace('flex', 'hidden');
-    }
-</script>
+<script src="{% static 'js/mypage.js' %}"></script>
 {% endblock %}

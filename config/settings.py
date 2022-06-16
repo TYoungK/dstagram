@@ -29,7 +29,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # SECRET_KEY = django_key
 SECRET_KEY = os.environ['DJANGO_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'imagekit',
     'crispy_forms',
     'crispy_tailwind',
+    'django_fields',
 ]
 
 MIDDLEWARE = [
@@ -168,6 +169,11 @@ DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
 
 STATIC_URL = 'http://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'config.asset_storage.StaticStorage'
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
