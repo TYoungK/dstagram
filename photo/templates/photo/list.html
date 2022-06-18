@@ -93,7 +93,9 @@
                             </div> -->
                             <span class="text-sm">
                                 <span id="like_count{{post.id}}" class="font-semibold">
+                                    {% if post.num_like %}
                                     {{post.num_like}}명이 좋아합니다.
+                                    {% endif %}
                                 </span>
                             </span>
                             </div>
