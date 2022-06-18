@@ -129,7 +129,7 @@ function like_photo(self,post_id){
         let req = e.target;
             if(req.readyState === XMLHttpRequest.DONE) {
                 if(req.status === 200) {
-                    $(self).children('img').attr("src","{% static 'public/images/icon_like.svg' %}");
+                    $(self).children('img').attr("src","{% static 'images/icon_like.svg' %}");
                     $(self).attr('onclick','unlike_photo(this,' + post_id + ')');
                     $('#like_count'+post_id).text(req.responseText + '명이 좋아합니다.');
                 }
@@ -146,7 +146,7 @@ function unlike_photo(self,post_id){
         let req = e.target;
             if(req.readyState === XMLHttpRequest.DONE) {
                 if(req.status === 200) {
-                    $(self).children('img').attr("src","{% static 'public/images/icon_unlike.svg' %}");
+                    $(self).children('img').attr("src","{% static 'images/icon_unlike.svg' %}");
                     $(self).attr('onclick','like_photo(this,' + post_id + ')');
                     $('#like_count'+post_id).text(req.responseText + '명이 좋아합니다.');
                 }
