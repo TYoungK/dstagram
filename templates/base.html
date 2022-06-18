@@ -7,12 +7,17 @@
     <meta name="google-site-verification" content="Uq-apxGh7J5OhLm3buvoqMearx2I83eTdExIIshiyKA" />
 
     {% load static %}
+    <script>
+        const like_img_url = "{% static 'images/icon_like.svg' %}";
+        const unlike_img_url = "{% static 'images/icon_unlike.svg' %}";
+    </script>
     <link rel="stylesheet" href="{% static 'css/splide.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="{% static 'js/tailwind-3.1.1.js' %}"></script>
     <script src="{% static 'js/splide.min.js' %}"></script>
     <script src="{% static 'js/base.js' %}"></script>
+    
     {% block head %}
     {% endblock %}
     <title>Dstagram {% block title %}{% endblock %}</title>
