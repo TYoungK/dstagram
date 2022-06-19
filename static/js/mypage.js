@@ -1,5 +1,6 @@
-let modal=document.getElementById('follow-modal');
-let modal_header=document.getElementById('follow-modal-header');
+let follow_modal=document.getElementById('follow-modal');
+let folllow_modal_header=document.getElementById('follow-modal-header');
+let user_config_modal=document.getElementById('user-config-modal');
 function disable_on_click() {
     var element = document.getElementById('submit-btn');
     element.setAttribute("disabled", "disabled");
@@ -23,8 +24,8 @@ function getFollowers(user_tag){
                 );
         }
         
-        modal_header.innerHTML = "팔로워";
-        modal.classList.replace('hidden', 'flex');
+        folllow_modal_header.innerHTML = "팔로워";
+        follow_modal.classList.replace('hidden', 'flex');
     }
     };
     xhr.open('GET', '/follower/' + user_tag);
@@ -50,14 +51,22 @@ function getFollowings(user_tag){
                 );
         }
         
-        modal_header.innerHTML = "팔로잉";
-        modal.classList.replace('hidden', 'flex');
+        follow_modal_header.innerHTML = "팔로잉";
+        follow_modal.classList.replace('hidden', 'flex');
     }
     };
     xhr.open('GET', '/following/' + user_tag);
     xhr.send();
 }
 
-function hideModal(){
+function hideFollowModal(){
     modal.classList.replace('flex', 'hidden');
+}
+
+function showConfigModal(){
+    user_config_modal.classList.replace('hidden', 'flex');
+}
+
+function hideConfigModal(){
+    user_config_modal.classList.replace('flex', 'hidden');
 }

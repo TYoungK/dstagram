@@ -6,7 +6,7 @@
     <div class="flex flex-wrap items-center justify-center p-4 md:py-8 bg-white">
         <form class="items-center justify-center bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="" method="post" enctype="multipart/form-data" onsubmit="disable_on_click()">
             <div class="mb-3 appearance-nonepy-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline block">
-                Do you want to delete {{object}}?
+                Do you want to delete {{object.email}}?
             </div>
             {{form.as_p}}
             {% csrf_token %}
