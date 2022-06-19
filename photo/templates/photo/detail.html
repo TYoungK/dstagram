@@ -110,15 +110,14 @@
                             </a>
                         </span>
                         {{post.text|linebreaksbr}}
-                        {{post.author}}
-                        {{user}}
+                        {% if post.author.get_username==user.get_username %}
                         <span class="text-base font-semibold">
                             <a href="{% url 'photo:photo_update' pk=post.id %}" class="bg-green-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
                                 Update</a>
                             <a href="{% url 'photo:photo_delete' pk=post.id %}" class="bg-red-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
                                 Delete</a>
                         </span>
-                        
+                        {% endif %}
                         </p>
                         <p class="text-xs" style="cursor: auto;">
                             <span class="text-[13px]">
