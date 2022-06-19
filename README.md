@@ -2,25 +2,23 @@
 
 ## 프로젝트 소개
 
----
-
 Instagram 클론 프로젝트입니다. 
 
 파이썬 웹 프로그래밍이라는 책의 카피 코딩으로 유저, 게시글 CRUD를 구현하였으며
 
 그 이후 혼자 공부하며 개발하는 중입니다.
 
-## 사용 기술
+접속 주소: [https://tyk-dstagram.herokuapp.com/](https://tyk-dstagram.herokuapp.com/)
 
----
+## 사용 기술
 
 - Django, Python
 - AWS S3
 - javascript
+- git
+- heroku
 
 ## 주요기능
-
----
 
 - 회원 가입 및 로그인, 로그아웃
 - 회원 정보 수정 및 탈퇴
@@ -31,8 +29,6 @@ Instagram 클론 프로젝트입니다.
 - 비동기 유저 검색
 
 ## 패치 노트
-
----
 
 ### v0.9
 
@@ -64,8 +60,6 @@ Instagram 클론 프로젝트입니다.
 
 ## 개발 예정
 
----
-
 1. 실시간 채팅
 2. 팔로우 할 유저 추천
 3. 검색 페이지 추가
@@ -84,120 +78,61 @@ Instagram 클론 프로젝트입니다.
 
 ## 모델 구조
 
----
-
 **User**
 
-email
-
-name
-
-tag
-
-birth_date
-
-profile_pic
-
-self_intro
-
-phone_num
-
-created
-
-is_active
-
-is_admin
-
-`EmailField`
-
-`CharField`
-
-`CharField`
-
-`DateField`
-
-`django_field.DefaultStaticImageField`
-
-`CharField`
-
-`CharField`
-
-`DateTimeField`
-
-`BooleanField`
-
-`BooleanField`
+| 필드명 | 타입 |
+| --- | --- |
+| email | EmailField |
+| name | CharField |
+| tag | CharField |
+| birth_date | DateField |
+| profile_pic | django_field.DefaultStaticImageField |
+| self_intro | CharField |
+| phone_num | CharField |
+| created | DateTimeField |
+| is_active | BooleanField |
+| is_admin | BooleanField |
 
 ---
 
 **Post**
 
-id
-
-author
-
-text
-
-created
-
-updated
-
-`AutoField`
-
-`ForeignKey(User)`
-
-`TextField`
-
-`DateTimeField`
-
-`DateTimeField`
+| 필드명 | 타입 |
+| --- | --- |
+| id | AutoField |
+| author | ForeignKey(User) |
+| text | TextField |
+| created | DateTimeField |
+| updated | DateTimeField |
 
 ---
 
 **Photo**
 
-post
-
-photo
-
-`ForeignKey(Post)`
-
-`imagekit.models.ProcessedImageField`
+| 필드명 | 타입 |
+| --- | --- |
+| post | ForeignKey(Post) |
+| photo | imagekit.models.ProcessedImageField |
 
 ---
 
-Follow
+**Follow**
 
-id
-
-user
-
-follow
-
-created
-
-`AutoField`
-
-`ForeignKey(User)`
-
-`ForeignKey(User)`
-
-`DateTimeField`
+| 필드명 | 타입 |
+| --- | --- |
+| id | AutoField |
+| user | ForeignKey(User) |
+| follow | ForeignKey(User) |
+| created | DateTimeField |
 
 ---
 
-Like
+**Like**
 
-post
-
-user
-
-created
-
-`ForeignKey(Post)`
-
-`ForeignKey(User)`
-
-`DateTimeField`
+| 필드명 | 타입 |
+| --- | --- |
+| post | ForeignKey(Post) |
+| user | ForeignKey(User) |
+| created | DateTimeField |
 
 ---
