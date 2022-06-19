@@ -110,7 +110,7 @@
                             </a>
                         </span>
                         {{post.text|linebreaksbr}}
-                        {% if post.author.get_username==user.get_username %}
+                        {% if post.author == user.get_username %}
                         <span class="text-base font-semibold">
                             <a href="{% url 'photo:photo_update' pk=post.id %}" class="bg-green-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
                                 Update</a>
