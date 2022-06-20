@@ -103,14 +103,14 @@
                     </div>
                     
                     <div style="cursor: auto;"> <!-- class="space-y-3" -->
-                        <p class="flex items-center justify-between text-sm" style="cursor: auto;">
+                        <p class="text-sm" style="cursor: auto;">
                         <span class="text-base font-semibold">
                             <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">
                                 {{post.author.tag}}
                             </a>
                         </span>
                         {{post.text|linebreaksbr}}
-                        {% if post.author == user.get_username %}
+                        {% if post.author == user %}
                         <span class="text-base font-semibold">
                             <a href="{% url 'photo:photo_update' pk=post.id %}" class="bg-green-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block">
                                 Update</a>
@@ -126,8 +126,8 @@
                                 </a>
                             </span>
                         </p>
-                        {% load disqus_tags %}
                         <div class="w-full py-0.5 bg-transparent border-none rounded text-sm pl-0 text-coolGray-100">
+                            {% load disqus_tags %}
                             {% disqus_show_comments %}
                         </div>
                         <!-- <input type="text" placeholder="Add a comment..." class="w-full py-0.5 bg-transparent border-none rounded text-sm pl-0 text-coolGray-100" style="cursor: auto;"> -->

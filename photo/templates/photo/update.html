@@ -6,7 +6,7 @@
 {% block content %}
 <div class="lg:w-8/12 lg:mx-auto mb-8">
     <div class="flex flex-wrap items-center justify-center p-4 md:py-8 bg-white">
-        <form id="form-container" action="" method="post" enctype="multipart/form-data" onsubmit="disable_on_click()">
+        <form id="form-container" action="" method="post" enctype="multipart/form-data" onsubmit="return disable_on_click()">
             {% csrf_token %}
             <div class="border border-gray-400">
                 {{form.text}}
@@ -14,13 +14,14 @@
             {{photos.management_form}}
             {% for form in photos %}
             <div class="image-form mt-3" seq="0">
-                {{form.photo}}<button class="delBtn bg-blue-500 px-2 py-1 font-semibold text-sm block text-center sm:inline-block block" type="button" onclick="deleteForm(this)">X</button>
+                {{form}}
                 <hr>
             </div>
             {% endfor %}
             <button class="inline-block text-blue-400 font-semibold text-sm my-5" id="add-form" type="button">Add Another Image</button><br>
             <input class="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block" type="submit" id="submit-btn" value="Upload">
         </form>
+
     </div>
 </div>
 <script>
@@ -40,9 +41,19 @@
 
         let newForm = imgForm[0].cloneNode(false);
         let children = Array.from(imgForm[0].childNodes).slice(6);
-        newForm.appendChild(imgForm[0].childNodes[1].cloneNode(true));
-        for(child of children){
-            newForm.appendChild(child.cloneNode(true));
+        // newForm.appendChild(imgForm[0].childNodes[1].cloneNode(true));
+        // console.log(Array.from(imgForm[0].childNodes))
+        // console.log(imgForm[0].childNodes[4].cloneNode(true))
+        newForm.innerHTML = "Photo: ";
+        for(var i=0;i<children.length;i++){
+            console.log(i, children[i]);
+            if(i==children.length-2){
+                newForm.innerHTML += '<button class="delBtn bg-blue-500 px-2 py-1 font-semibold text-sm block text-center sm:inline-block block" type="button" onclick="deleteForm(this)">X</button>';
+            }
+            if(i==2||i==3){
+                continue
+            }
+            newForm.appendChild(children[i].cloneNode(true));
         }
         
         let formRegex = RegExp(`photos-(\\d){1}-`,'g');
@@ -87,17 +98,26 @@
     }
     function check_file(){
         imgForm = document.querySelectorAll(".image-form");
+        let delformCnt = 0;
+        let allDel = true;
         for(var i=0; i<formNum+1; i++){
             let filetag = document.getElementById("id_user_photos-"+ i +"-photo");
             let atag = imgForm[i].getElementsByTagName("a").length;
             if(!atag){
                 if(filetag.files.length){
-                    console.log("a NO,file OK: " + i);
+                    //console.log("a NO,file OK: " + i);
                 }
                 else{
                     alert("추가할 파일을 선택해주세요.");
                     return false;
                 }
+            }
+            else{
+                let delForm = document.getElementById("id_user_photos-"+ i +"-DELETE");
+                if(!delForm.checked){
+                    allDel = false;
+                }
+                delformCnt++;
             }
             // if(atag){
             //     if(imgForm[i].getElementsByTagName('input')[1].checked){
@@ -108,6 +128,10 @@
             //     }
             // }
             
+        }
+        if((formNum+1)==delformCnt && allDel){
+            alert("최소 하나의 파일을 선택해주세요.");
+            return false;
         }
         return true;
     }

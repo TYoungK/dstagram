@@ -188,7 +188,7 @@
                     </span>
                     </div>
                 </div>
-                <div class="space-y-3" style="cursor: auto;">
+                <div style="cursor: auto;">
                     <p class="text-sm" style="cursor: auto;">
                     <span class="text-base font-semibold">
                         <a href="{% url 'photo:photo_list_user' user_tag=post.author.tag %}">
@@ -196,6 +196,13 @@
                         </a>
                     </span>
                     {{post.text|linebreaksbr}}
+                    </p>
+                    <p class="text-xs" style="cursor: auto;">
+                        <span class="text-[13px]">
+                            <a href="{% url 'photo:photo_detail' pk=post.id %}">
+                                <time datetime="{{post.updated}}">{{post.updated.year}}년 {{post.updated.month}}월 {{post.updated.day}}일</time>
+                            </a>
+                        </span>
                     </p>
                     <!-- <input type="text" placeholder="Add a comment..." class="w-full py-0.5 bg-transparent border-none rounded text-sm pl-0 text-coolGray-100" style="cursor: auto;"> -->
                 </div>

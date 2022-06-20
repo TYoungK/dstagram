@@ -29,7 +29,9 @@
         element.setAttribute("disabled", "disabled");
     }
     for(el of document.getElementsByTagName('input')){
-        el.classList.add('w-full');
+        if(el.getAttribute('type')!="checkbox" && el.getAttribute('type')!="file"){
+            el.classList.add('w-full');
+        }
     }
 </script>
 {% endblock %}
