@@ -1,5 +1,5 @@
 let follow_modal=document.getElementById('follow-modal');
-let folllow_modal_header=document.getElementById('follow-modal-header');
+let follow_modal_header=document.getElementById('follow-modal-header');
 let user_config_modal=document.getElementById('user-config-modal');
 function disable_on_click() {
     var element = document.getElementById('submit-btn');
@@ -24,7 +24,7 @@ function getFollowers(user_tag){
                 );
         }
         
-        folllow_modal_header.innerHTML = "팔로워";
+        follow_modal_header.innerHTML = "팔로워";
         follow_modal.classList.replace('hidden', 'flex');
     }
     };
