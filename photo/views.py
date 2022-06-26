@@ -151,6 +151,8 @@ def photo_list_user(request, user_tag): #특정 유저의 게시글 로드
         followed = followed_tmp[0]
 
     posts = Post.objects.prefetch_related('user_photos').filter(author=this_user)[(page_num-1)*9:page_num*9]
+    posts = posts.annotate(num_like=Count('like')) \
+        .annotate(bool_like=Exists(Like.objects.filter(post=OuterRef('id'), user=request.user.id)))
     return render(request, 'photo/mypage.html',
                   {'posts': posts, 'this_user': this_user,
                    'followers': followers, 'followings': followings, 'followed': followed})

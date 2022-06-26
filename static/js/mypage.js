@@ -60,7 +60,7 @@ function getFollowings(user_tag){
 }
 
 function hideFollowModal(){
-    modal.classList.replace('flex', 'hidden');
+    follow_modal.classList.replace('flex', 'hidden');
 }
 
 function showConfigModal(){
