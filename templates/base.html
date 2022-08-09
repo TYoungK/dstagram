@@ -40,11 +40,15 @@
             </div>
             
             <div class="flex space-x-4 items-center justify-center">
-                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_upload' %}">Upload</a>
-                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_list_user' user_tag=user.tag%}">
-                    <img class="w-10 h-10 object-cover rounded-full p-1" src="{{user.profile_pic.url}}">
+                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_upload' %}">
+                    <img class="w-10 h-10 object-cover p-1" src="{% static 'images/icon-upload.png' %}">
                 </a>
-                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'accounts:logout' %}">Logout</a>
+                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'chat:chat-list' %}">
+                    <img class="w-10 h-10 object-cover p-1" src="{% static 'images/icon-dm.png' %}">
+                </a>
+                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_list_user' user_tag=user.tag%}">
+                    <img class="w-10 h-10 object-cover p-1" src="{{user.profile_pic.url}}">
+                </a>
             </div>
             {% else %}
             <div class="flex space-x-4 items-center justify-center">

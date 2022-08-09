@@ -262,6 +262,13 @@
             <div class="p-6 overflow-y-auto max-h-80">
                 <ul id="user_config_list" class="my-4 space-y-3">
                     <li>
+                        <a href="{% url 'accounts:logout' %}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
+                        <span class="flex-1 ml-3 whitespace-nowrap">
+                            로그아웃
+                        </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{% url 'accounts:user_delete' user_id=user.email %}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
                         <span class="flex-1 ml-3 whitespace-nowrap">
                             회원 탈퇴
