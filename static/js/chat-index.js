@@ -1,30 +1,10 @@
-// chat/static/index.js
+let followings_modal=document.getElementById('user-list-modal');
+let chatSocket = null;
 
-console.log("Sanity check from index.js.");
-
-// focus 'roomInput' when user opens the page
-document.querySelector("#roomInput").focus();
-
-// submit if the user presses the enter key
-document.querySelector("#roomInput").onkeyup = function(e) {
-    if (e.keyCode === 13) {  // enter key
-        document.querySelector("#roomConnect").click();
-    }
-};
-
-// redirect to '/room/<roomInput>/'
-document.querySelector("#roomConnect").onclick = function() {
-    let roomName = document.querySelector("#roomInput").value;
-    window.location.pathname = "chat/" + roomName + "/";
-}
-
-// redirect to '/room/<roomSelect>/'
 document.querySelector("#roomSelect").onchange = function() {
     let roomName = document.querySelector("#roomSelect").value.split(" (")[0];
     window.location.pathname = "chat/" + roomName + "/";
 }
-
-let chatSocket = null;
 
 function connect() {
     chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/");
@@ -65,3 +45,35 @@ function connect() {
     }
 }
 connect();
+
+//---
+
+function getFollowings(user_tag){
+    let xhr = new XMLHttpRequest();
+    xhr.onload = ()=>{
+        if (xhr.status === 200) {
+        followings = JSON.parse(xhr.responseText);
+        $('#chat_users_list').html('');
+        for(var following of followings){
+            $('#chat_users_list').append(
+                '<li>'+
+                '<a href="/chat/' + following.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
+                '<img class="w-10 h-10 object-cover rounded-full p-1" src='+ following.profile_pic +'>'+
+                '<span class="flex-1 ml-3 whitespace-nowrap">'+
+                following.tag+
+                '</span>'+
+                '</a>'+
+                '</li>'
+                );
+        }
+        
+        followings_modal.classList.replace('hidden', 'flex');
+    }
+    };
+    xhr.open('GET', '/following/' + user_tag);
+    xhr.send();
+}
+
+function hideFollowModal(){
+    followings_modal.classList.replace('flex', 'hidden');
+}
