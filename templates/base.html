@@ -46,8 +46,8 @@
                 <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'chat:chat-list' %}">
                     <img class="w-10 h-10 object-cover p-1" src="{% static 'images/icon-dm.png' %}">
                 </a>
-                <a class="inline-block text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_list_user' user_tag=user.tag%}">
-                    <img class="w-10 h-10 object-cover p-1" src="{{user.profile_pic.url}}">
+                <a class="inline-block rounded-full text-blue-500 font-semibold text-sm" href="{% url 'photo:photo_list_user' user_tag=user.tag%}">
+                    <img class="rounded-full w-10 h-10 object-cover p-1" src="{{user.profile_pic.url}}">
                 </a>
             </div>
             {% else %}
@@ -91,7 +91,7 @@
     </div>
     
 
-    <footer class="footer">
+    <footer class="footer flex justify-center">
         <p>&copy; Powered By Django</p>
     </footer>
 </div>

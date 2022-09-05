@@ -2,6 +2,8 @@ import json
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.core.serializers.json import DjangoJSONEncoder
+from accounts.models import User
 from .models import Room, Message
 
 
@@ -9,16 +11,16 @@ class ChatConsumer(WebsocketConsumer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
-        self.room_name = None
+        self.opponent = None
         self.room_group_name = None
         self.room = None
         self.user = None
 
     def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f'chat_{self.room_name}'
-        self.room = Room.objects.get(name=self.room_name)
+        self.opponent = self.scope['url_route']['kwargs']['opponent_tag']
         self.user = self.scope['user']
+        self.room = Room.objects.filter(users__tag=self.user.tag).filter(users__tag=self.opponent)[0]
+        self.room_group_name = f'chat_{self.room.id}'
 
         self.accept()
 
@@ -27,15 +29,18 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name,
         )
 
-        if self.user.is_authenticated:
-            self.room.users.add(self.user)
-            self.room.save()
-        
+        self.room.users.add(self.user)
+        self.room.users.add(User.objects.get(tag=self.opponent))
+        self.room.save()
+
         self.send(json.dumps({
-            'type': 'user_list',
-            'messages': list(Message.objects.filter(room=self.room).values('user', 'content')),
+            'type': 'chat_catalog',
+            'messages': [{"user_profile": msg.user.profile_pic.url, "user_tag": msg.user.tag,
+                          "user_name": msg.user.name, "content": msg.content,
+                          "my_message": self.user == msg.user, "time": msg.timestamp}
+                         for msg in Message.objects.filter(room=self.room)],
             'users': [user.name for user in self.room.users.all()],
-        }))
+        }, cls=DjangoJSONEncoder))
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
@@ -57,7 +62,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'user': self.user.name,
+                'user': self.user.tag,
                 'message': message,
             }
         )

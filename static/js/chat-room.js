@@ -5,22 +5,6 @@ const roomName = JSON.parse(document.getElementById('roomName').textContent);
 let chatLog = document.querySelector("#chatLog");
 let chatMessageInput = document.querySelector("#chatMessageInput");
 let chatMessageSend = document.querySelector("#chatMessageSend");
-let onlineUsersSelector = document.querySelector("#onlineUsersSelector");
-
-// adds a new option to 'onlineUsersSelector'
-function onlineUsersSelectorAdd(value) {
-    if (document.querySelector("option[value='" + value + "']")) return;
-    let newOption = document.createElement("option");
-    newOption.value = value;
-    newOption.innerHTML = value;
-    onlineUsersSelector.appendChild(newOption);
-}
-
-// removes an option from 'onlineUsersSelector'
-function onlineUsersSelectorRemove(value) {
-    let oldOption = document.querySelector("option[value='" + value + "']");
-    if (oldOption !== null) oldOption.remove();
-}
 
 // focus 'chatMessageInput' when user opens the page
 chatMessageInput.focus();
@@ -63,13 +47,31 @@ function connect() {
         console.log(data);
 
         switch (data.type) {
-            case "user_list":
-                for (let i = 0; i < data.users.length; i++) {
-                    onlineUsersSelectorAdd(data.users[i]);
+            case "chat_catalog":
+                var chatLogul = document.createElement("ul");
+                for (var msg of data.messages){
+                    if(msg.my_message){
+                        chatLog.innerHTML += 
+                        '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + msg.content + '</div></li>';
+                    }else{
+                        chatLog.innerHTML += 
+                        '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + msg.content + '</div></li>';
+                    }
+                    
                 }
+                chatLog.append(chatLogul);
+                chatLog.parentElement.scrollTop = chatLog.parentElement.scrollHeight
                 break;
             case "chat_message":
-                chatLog.value += data.user + ": " + data.message + "\n";
+                console.log(roomName, data.user)
+                if(roomName==data.user){
+                    chatLog.innerHTML += 
+                        '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + data.message + '</div></li>';
+                }else{
+                    chatLog.innerHTML += 
+                        '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + data.message + '</div></li>';
+                }
+                chatLog.parentElement.scrollTop = chatLog.parentElement.scrollHeight
                 break;
             default:
                 console.error("Unknown message type!");

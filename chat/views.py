@@ -12,8 +12,10 @@ def index_view(request):
 
 
 @login_required
-def room_view(request, room_name):
-    chat_room, created = Room.objects.get_or_create(name=room_name)
+def room_view(request, opponent_tag):
+    # participant = User.objects.filter(tag__in=[request.user.tag, opponent_tag])
+
     return render(request, 'room.html', {
-        'room': chat_room,
+        'room': Room.objects.filter(users__tag=request.user.tag).filter(users__tag=opponent_tag),
+        'opponent': User.objects.get(tag=opponent_tag)
     })
