@@ -33,35 +33,35 @@ Instagram 클론 프로젝트입니다.
 
 ### v0.9
 
-1. User Model 커스터마이징
+- User Model 커스터마이징
 - 프로필 이미지를 위한 `ImageField` 추가.
 - username field 기본값을 email로 변경.
 - 닉네임과 같은 용도의 tag 생성.
 
-1. 비동기 유저 검색 기능
+- 비동기 유저 검색 기능
 - DRF serializer를 이용해 필요한 필드값만 응답
 
-1. 다중 파일 업로드
+- 다중 파일 업로드
 - 기존 Photo Model에서 Post, Photo 두개의 모델로 1:N 모델로 수정.
 - imagekit app을 이용한 이미지 Resizing(2.07MB→21.7KB, 5.16MB→37.3KB ⇒ 약 99% 저장공간 절감)
 - InlineFormSet 이용한 데이터 송수신.
 - `TabularInline`를 이용해 Admin 페이지 수정.
 - splider.js 라이브러리를 이용한 슬라이드로 게시글의 이미지를 보여줍니다.
 
-1. 팔로우
+- 팔로우
 - Follow 모델 생성
 - 메인 피드는 팔로우한 유저와 본인의 게시글만 보여줍니다.
 
-1. 좋아요
+- 좋아요
 - Like 모델 생성
 - 비동기로 좋아요 처리 후 현재 좋아요 수를 응답합니다.
 
-1. `secret_keys.py` 헤로쿠 환경변수 처리
+- `secret_keys.py` 헤로쿠 환경변수 처리
 - Django `SECRET_KEY` 및 AWS S3 `ACCESS_KEY`
 
 ## 개발 예정
 
-1. 실시간 채팅
+1. ~~실시간 채팅~~
 2. 팔로우 할 유저 추천
 3. 검색 페이지 추가
 4. 해시태그
