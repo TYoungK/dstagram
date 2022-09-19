@@ -19,7 +19,8 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.opponent = self.scope['url_route']['kwargs']['opponent_tag']
         self.user = self.scope['user']
-        self.room = Room.objects.filter(users__tag=self.user.tag).filter(users__tag=self.opponent)[0]
+        room_exist = Room.objects.filter(users__tag=self.user.tag).filter(users__tag=self.opponent)
+        self.room = room_exist[0] if room_exist.count() else Room.objects.create()
         self.room_group_name = f'chat_{self.room.id}'
 
         self.accept()
@@ -32,15 +33,15 @@ class ChatConsumer(WebsocketConsumer):
         self.room.users.add(self.user)
         self.room.users.add(User.objects.get(tag=self.opponent))
         self.room.save()
-
-        self.send(json.dumps({
-            'type': 'chat_catalog',
-            'messages': [{"user_profile": msg.user.profile_pic.url, "user_tag": msg.user.tag,
-                          "user_name": msg.user.name, "content": msg.content,
-                          "my_message": self.user == msg.user, "time": msg.timestamp}
-                         for msg in Message.objects.filter(room=self.room)],
-            'users': [user.name for user in self.room.users.all()],
-        }, cls=DjangoJSONEncoder))
+        if room_exist.count():
+            self.send(json.dumps({
+                'type': 'chat_catalog',
+                'messages': [{"user_profile": msg.user.profile_pic.url, "user_tag": msg.user.tag,
+                              "user_name": msg.user.name, "content": msg.content,
+                              "my_message": self.user == msg.user, "time": msg.timestamp}
+                             for msg in Message.objects.filter(room=self.room)],
+                'users': [user.name for user in self.room.users.all()],
+            }, cls=DjangoJSONEncoder))
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(

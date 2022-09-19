@@ -5,6 +5,36 @@ const roomName = JSON.parse(document.getElementById('roomName').textContent);
 let chatLog = document.querySelector("#chatLog");
 let chatMessageInput = document.querySelector("#chatMessageInput");
 let chatMessageSend = document.querySelector("#chatMessageSend");
+const pattern = new RegExp("^((http|https)\:\/\/)?[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\:\'\/\\\\+=&%\$#_]*)?$");
+
+function validURL(str) {
+    return pattern.test(str);
+}
+
+function create_protocol(str){
+    if(!str.startsWith('http')){
+        str = 'http://' + str
+    }
+    return str
+}
+
+function createLeftMessage(str){
+    if(validURL(str)){
+        return '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + 
+        '<a class="underline text-blue-600" href="' + create_protocol(str) + '" target="_blank">' + str + '</a></div></li>';
+    }else{
+        return '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + str + '</div></li>';
+    }
+}
+
+function createRightMessage(str){
+    if(validURL(str)){
+        return '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + 
+        '<a class="underline text-blue-600" href="' + create_protocol(str) + '" target="_blank">' + str + '</a></div></li>';
+    }else{
+        return '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + str + '</div></li>';
+    }
+}
 
 // focus 'chatMessageInput' when user opens the page
 chatMessageInput.focus();
@@ -44,18 +74,15 @@ function connect() {
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        console.log(data);
 
         switch (data.type) {
             case "chat_catalog":
                 var chatLogul = document.createElement("ul");
                 for (var msg of data.messages){
                     if(msg.my_message){
-                        chatLog.innerHTML += 
-                        '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + msg.content + '</div></li>';
+                        chatLog.innerHTML += createRightMessage(msg.content);
                     }else{
-                        chatLog.innerHTML += 
-                        '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + msg.content + '</div></li>';
+                        chatLog.innerHTML += createLeftMessage(msg.content);
                     }
                     
                 }
@@ -63,13 +90,10 @@ function connect() {
                 chatLog.parentElement.scrollTop = chatLog.parentElement.scrollHeight
                 break;
             case "chat_message":
-                console.log(roomName, data.user)
                 if(roomName==data.user){
-                    chatLog.innerHTML += 
-                        '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + data.message + '</div></li>';
+                    chatLog.innerHTML += createLeftMessage(data.message);
                 }else{
-                    chatLog.innerHTML += 
-                        '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + data.message + '</div></li>';
+                    chatLog.innerHTML += createRightMessage(data.message);
                 }
                 chatLog.parentElement.scrollTop = chatLog.parentElement.scrollHeight
                 break;

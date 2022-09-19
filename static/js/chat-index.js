@@ -1,6 +1,5 @@
 let followings_modal=document.getElementById('user-list-modal');
 let chat_search = document.querySelector("#chat_list_text");
-let chatSocket = null;
 
 document.querySelector("#roomSelect").ondblclick = function() {
     let roomName = document.querySelector("#roomSelect").value.split(" (")[0];

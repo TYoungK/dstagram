@@ -14,8 +14,11 @@ def index_view(request):
 @login_required
 def room_view(request, opponent_tag):
     # participant = User.objects.filter(tag__in=[request.user.tag, opponent_tag])
+    room = Room.objects.filter(users__tag=request.user.tag).filter(users__tag=opponent_tag)
+    if room.count() == 0:
+        room = Room.objects.create()
 
     return render(request, 'room.html', {
-        'room': Room.objects.filter(users__tag=request.user.tag).filter(users__tag=opponent_tag),
+        'room': room,
         'opponent': User.objects.get(tag=opponent_tag)
     })
