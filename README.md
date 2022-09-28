@@ -56,7 +56,7 @@ Instagram 클론 프로젝트입니다.
 - Like 모델 생성
 - 비동기로 좋아요 처리 후 현재 좋아요 수를 응답합니다.
 
-- `secret_keys.py` 헤로쿠 환경변수 처리
+- `secret_key.py` 헤로쿠 환경변수 처리
 - Django `SECRET_KEY` 및 AWS S3 `ACCESS_KEY`
 
 ## 개발 예정

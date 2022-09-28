@@ -5,7 +5,7 @@ const roomName = JSON.parse(document.getElementById('roomName').textContent);
 let chatLog = document.querySelector("#chatLog");
 let chatMessageInput = document.querySelector("#chatMessageInput");
 let chatMessageSend = document.querySelector("#chatMessageSend");
-const pattern = new RegExp("^((http|https)\:\/\/)?[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\:\'\/\\\\+=&%\$#_]*)?$");
+const pattern = new RegExp(/(http(s)?:\/\/|www.)([a-z0-9\w]+\.*)+[a-z0-9]{2,4}([\/a-z0-9-%#?&=\w])+(\.[a-z0-9]{2,4}(\?[\/a-z0-9-%#?&=\w]+)*)*/gi);
 
 function validURL(str) {
     return pattern.test(str);
@@ -21,7 +21,7 @@ function create_protocol(str){
 function createLeftMessage(str){
     if(validURL(str)){
         return '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + 
-        '<a class="underline text-blue-600" href="' + create_protocol(str) + '" target="_blank">' + str + '</a></div></li>';
+        '<a class="underline text-blue-600" href="' + str + '" target="_blank">' + str + '</a></div></li>';
     }else{
         return '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + str + '</div></li>';
     }
@@ -30,7 +30,7 @@ function createLeftMessage(str){
 function createRightMessage(str){
     if(validURL(str)){
         return '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + 
-        '<a class="underline text-blue-600" href="' + create_protocol(str) + '" target="_blank">' + str + '</a></div></li>';
+        '<a class="underline text-blue-600" href="' + str + '" target="_blank">' + str + '</a></div></li>';
     }else{
         return '<li class="flex items-center justify-end px-4"><div class="px-4 border w-fit max-w-[50%]">' + str + '</div></li>';
     }

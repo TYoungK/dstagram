@@ -1,10 +1,7 @@
 let followings_modal=document.getElementById('user-list-modal');
 let chat_search = document.querySelector("#chat_list_text");
 
-document.querySelector("#roomSelect").ondblclick = function() {
-    let roomName = document.querySelector("#roomSelect").value.split(" (")[0];
-    window.location.pathname = "chat/" + roomName + "/";
-}
+
 const chat_search_users = function(event){
     if(chat_search.value != ''){
         let xhttp = new XMLHttpRequest();
@@ -52,9 +49,9 @@ function getFollowings(user_tag){
     xhr.onload = ()=>{
         if (xhr.status === 200) {
         followings = JSON.parse(xhr.responseText);
-        $('#chat_users_list').html('');
+        document.querySelector('#modal-chat-users-list').innerHTML = "";
         for(var following of followings){
-            $('#chat_users_list').append(
+            document.querySelector('#modal-chat-users-list').innerHTML +=
                 '<li>'+
                 '<a href="/chat/' + following.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
                 '<img class="w-10 h-10 object-cover rounded-full p-1" src='+ following.profile_pic +'>'+
@@ -63,7 +60,7 @@ function getFollowings(user_tag){
                 '</span>'+
                 '</a>'+
                 '</li>'
-                );
+                ;
         }
         
         followings_modal.classList.replace('hidden', 'flex');

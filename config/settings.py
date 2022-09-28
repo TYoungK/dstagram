@@ -14,22 +14,25 @@ from pathlib import Path
 import os
 import dj_database_url
 import sys
-from .secret_key import *
+import environ
 
 sys.modules['django.utils.six.moves.urllib.parse'] = __import__('six.moves.urllib.parse', fromlist=['urlencode'])
 sys.modules['django.utils.six.moves.urllib.request'] = __import__('six.moves.urllib.request', fromlist=['urlopen'])
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
+env = environ.Env(DEBUG=(bool, False))
+
+# reading .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 AUTH_USER_MODEL = 'accounts.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = django_key
-# SECRET_KEY = os.environ['DJANGO_KEY']
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -91,7 +94,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
@@ -161,16 +164,16 @@ LOGIN_REDIRECT_URL = '/'
 DISQUS_WEBSITE_SHORTNAME = 'dstagram-tyk'
 SITE_ID = 1
 
-AWS_ACCESS_KEY_ID = AWS_KEYS.access_key_id
-AWS_SECRET_ACCESS_KEY = AWS_KEYS.secret_access_key
+AWS_ACCESS_KEY_ID = env('S3_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('S3_SECRET_ACCESS_KEY')
 
 # 헤로쿠 업로드용
 # AWS_ACCESS_KEY_ID = os.environ['S3_ACCESS_KEY']
 # AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET_KEY']
 
-AWS_REGION = 'ap-northeast-2'
-AWS_STORAGE_BUCKET_NAME = 'dstagram-tyks'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+AWS_REGION = env('AWS_REGION')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = env('AWS_S3_CUSTOM_DOMAIN')
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=691,200'}
 AWS_DEFAULT_ACL = 'public-read'
 AWS_LOCATION = 'static'
