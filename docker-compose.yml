@@ -15,7 +15,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redisdata:./data/redis
+      - redisdata:/data
 
   web:
     container_name: web
