@@ -14,9 +14,10 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
 RUN apk update
+RUN apk add python3 python3-dev mariadb-dev build-essential
 RUN python -m pip install --upgrade pip
-RUN apk add python3 python3-dev mariadb-dev build-base && pip install mysqlclient
-
+RUN pip install --upgrade setuptools
+RUN pip install mysqlclient
 # install dependencies
 COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
