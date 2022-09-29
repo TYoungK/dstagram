@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
 RUN apk update
-RUN apk add python3 python3-dev mariadb-dev build-essential
+RUN apk add python3 python3-dev mariadb-dev build-base
 RUN python -m pip install --upgrade pip
 RUN pip install --upgrade setuptools
 RUN pip install mysqlclient
