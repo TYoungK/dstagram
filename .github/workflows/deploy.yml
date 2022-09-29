@@ -36,4 +36,4 @@ jobs:
         username: ubuntu
         key: ${{ secrets.KEY }}
         script: |
-          sh /home/ubuntu/srv/ubuntu/config/scripts/deploy.sh
+          sh /home/ubuntu/srv/ubuntu/.github/scripts/deploy.sh
