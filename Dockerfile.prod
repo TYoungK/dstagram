@@ -2,7 +2,7 @@
 ###########
 
 # pull official base image
-FROM python:3.8.0-alpine as builder
+FROM python:3.8.5-alpine as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -14,8 +14,8 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2 dependencies
 RUN apk update
-RUN pip install --upgrade pip
-RUN apk add python3 python3-dev mariadb-dev build-base && pip3 install mysqlclient
+RUN python -m pip install --upgrade pip
+RUN apk add python3 python3-dev mariadb-dev build-base && pip install mysqlclient
 
 # install dependencies
 COPY ./requirements.txt .
@@ -25,7 +25,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 # FINAL #
 
 # pull official base image
-FROM python:3.8.0-alpine
+FROM python:3.8.5-alpine
 
 # create directory for the app user
 RUN mkdir -p /home/app
