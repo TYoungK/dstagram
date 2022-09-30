@@ -31,16 +31,12 @@ services:
     restart: always
     environment:
       - SQLITE3_DB=db.dstagram
-    volumes: # 파일 시스템 정의
-      - ./data/db:/ubuntu/db
 
   redis:
     container_name: redis
     image: redis:latest
     ports:
       - "6379:6379"
-    volumes:
-      - ./data/redis:/ubuntu/redis
 
 volumes:
   static:
