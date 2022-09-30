@@ -4,7 +4,6 @@ services:
   db:
     container_name: db
     image: keinos/sqlite3
-    restart: always
     environment:
       - SQLITE3_DB=db.dstagram
     volumes: # 파일 시스템 정의
@@ -20,7 +19,7 @@ services:
   web:
     container_name: web
     build: . # . 은 디폴트 -> 프로젝트 내의 "Dockerfile"이라는 이름을 알아서 찾아 빌드해줌
-    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000" # 최종 런서버 - 브라우저에서 확인 가능
+    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000" # 최종 런서버 - 브라우저에서 확인 가능
     restart: always
     ports:
       - "8000:8000"
@@ -31,3 +30,4 @@ services:
 volumes:
   app:
   dbdata:
+  redisdata:
