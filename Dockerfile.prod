@@ -13,7 +13,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN apk update
-RUN apk add python3 python3-dev mariadb-dev build-base gcc libffi-dev tiff-dev jpeg-dev openjpeg-dev zlib-dev
+RUN apk add python3 python3-dev mariadb-dev build-base gcc libffi-dev tiff-dev libjpeg-dev jpeg-dev openjpeg-dev zlib-dev
 RUN python -m pip install --upgrade pip
 RUN pip install --upgrade setuptools wheel
 RUN pip install mysqlclient
