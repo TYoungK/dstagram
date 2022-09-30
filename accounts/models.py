@@ -3,7 +3,6 @@ from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.core.validators import RegexValidator
 from django.urls import reverse
 from config.asset_storage import ProfileStorage
-from config.settings import STATIC_URL
 from django_fields import DefaultStaticImageField
 
 class UserManager(BaseUserManager):
