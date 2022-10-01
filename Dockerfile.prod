@@ -16,7 +16,7 @@ RUN apk update
 RUN apk add python3 python3-dev mariadb-dev build-base gcc libffi-dev musl-dev \
     tiff-dev jpeg-dev openjpeg-dev zlib-dev freetype-dev lcms2-dev \
     libwebp-dev tcl-dev tk-dev harfbuzz-dev fribidi-dev libimagequant-dev \
-    libxcb-dev libpng-dev redis
+    libxcb-dev libpng-dev
 RUN python3 -m pip install --upgrade pip
 RUN pip install --upgrade setuptools wheel
 RUN pip install mysqlclient

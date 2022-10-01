@@ -17,31 +17,37 @@ class ChatConsumer(WebsocketConsumer):
         self.user = None
 
     def connect(self):
-        self.opponent = self.scope['url_route']['kwargs']['opponent_tag']
-        self.user = self.scope['user']
-        room_exist = Room.objects.filter(users__tag=self.user.tag).filter(users__tag=self.opponent)
-        self.room = room_exist[0] if room_exist.count() else Room.objects.create()
-        self.room_group_name = f'chat_{self.room.id}'
+        try:
+            self.opponent = self.scope['url_route']['kwargs']['opponent_tag']
+            self.user = self.scope['user']
+            room_exist = Room.objects.filter(users__tag=self.user.tag).filter(users__tag=self.opponent)
+            self.room = room_exist[0] if room_exist.count() else Room.objects.create()
+            self.room_group_name = f'chat_{self.room.id}'
 
-        self.accept()
+            self.accept()
 
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name,
-        )
+            async_to_sync(self.channel_layer.group_add)(
+                self.room_group_name,
+                self.channel_name,
+            )
 
-        self.room.users.add(self.user)
-        self.room.users.add(User.objects.get(tag=self.opponent))
-        self.room.save()
-        if room_exist.count():
-            self.send(json.dumps({
-                'type': 'chat_catalog',
-                'messages': [{"user_profile": msg.user.profile_pic.url, "user_tag": msg.user.tag,
-                              "user_name": msg.user.name, "content": msg.content,
-                              "my_message": self.user == msg.user, "time": msg.timestamp}
-                             for msg in Message.objects.filter(room=self.room)],
-                'users': [user.name for user in self.room.users.all()],
-            }, cls=DjangoJSONEncoder))
+            self.room.users.add(self.user)
+            self.room.users.add(User.objects.get(tag=self.opponent))
+            self.room.save()
+            if room_exist.count():
+                self.send(json.dumps({
+                    'type': 'chat_catalog',
+                    'messages': [{"user_profile": msg.user.profile_pic.url, "user_tag": msg.user.tag,
+                                  "user_name": msg.user.name, "content": msg.content,
+                                  "my_message": self.user == msg.user, "time": msg.timestamp}
+                                 for msg in Message.objects.filter(room=self.room)],
+                    'users': [user.name for user in self.room.users.all()],
+                }, cls=DjangoJSONEncoder))
+        except Exception as e:
+            print(e)
+
+
+
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
