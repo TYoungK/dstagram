@@ -40,7 +40,10 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+    volumes:
+      - redisdata:/home/app/web/data/redis
 
 volumes:
   static:
   media:
+  redisdata:
