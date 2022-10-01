@@ -1,6 +1,15 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 #
