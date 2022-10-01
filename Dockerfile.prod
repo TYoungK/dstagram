@@ -53,7 +53,7 @@ RUN apk update \
     && apk add --virtual build-deps gcc python3-dev musl-dev \
         tiff-dev jpeg-dev openjpeg-dev zlib-dev freetype-dev lcms2-dev \
         libwebp-dev tcl-dev tk-dev harfbuzz-dev fribidi-dev libimagequant-dev \
-        libxcb-dev libpng-dev redis-server \
+        libxcb-dev libpng-dev redis \
     && apk add --no-cache mariadb-dev
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
