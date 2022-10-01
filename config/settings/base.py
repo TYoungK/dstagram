@@ -19,7 +19,7 @@ import environ
 sys.modules['django.utils.six.moves.urllib.parse'] = __import__('six.moves.urllib.parse', fromlist=['urlencode'])
 sys.modules['django.utils.six.moves.urllib.request'] = __import__('six.moves.urllib.request', fromlist=['urlopen'])
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 env = environ.Env(DEBUG=(bool, False))
 

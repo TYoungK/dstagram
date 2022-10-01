@@ -61,9 +61,7 @@ RUN python3 -m pip install --upgrade pip
 RUN pip install --upgrade setuptools wheel
 RUN pip install mysqlclient
 RUN pip install --no-cache /wheels/*
-RUN pip list
 RUN pip install --upgrade pillow pilkit
-RUN pip list
 RUN apk del build-deps
 
 # copy entrypoint-prod.sh
