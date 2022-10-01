@@ -24,6 +24,9 @@ services:
       - "80:80"
     depends_on: # web 컨테이너로 연결
       - web
+    volumes:
+      - static:/home/app/web/static
+      - media:/home/app/web/media
 
   db:
     container_name: db
