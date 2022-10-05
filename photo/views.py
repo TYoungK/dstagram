@@ -107,6 +107,7 @@ class PhotoDetailView(LoginRequiredMixin, DeleteView):
         context['photos'] = Photo.objects.filter(post=self.object)
         return context
 
+
 class FollowingView(LoginRequiredMixin, CreateView):
     model = Follow
     fields = ['user','follow']
@@ -120,10 +121,12 @@ class FollowingView(LoginRequiredMixin, CreateView):
         else:
             return self.render_to_response({'form': form})
 
+
 class UnFollowingView(LoginRequiredMixin, DeleteView):
     model = Follow
     def get_success_url(self):
         return reverse_lazy('photo:photo_list_user', kwargs={'user_tag': self.request.POST['followname']})
+
 
 @login_required
 @api_view(('GET', 'POST'))
