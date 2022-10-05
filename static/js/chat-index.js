@@ -1,6 +1,6 @@
 let followings_modal=document.getElementById('user-list-modal');
 let chat_search = document.querySelector("#chat_list_text");
-
+let modal_users_list = document.querySelector('#modal-chat-users-list')
 
 const chat_search_users = function(event){
     if(chat_search.value != ''){
@@ -10,10 +10,10 @@ const chat_search_users = function(event){
             if(req.readyState === XMLHttpRequest.DONE) {
                 if(req.status === 200) {
                     var users = JSON.parse(req.responseText);
-                    document.querySelector('#chat_users_list').innerHTML = "";
+                    modal_users_list.innerHTML = "";
                     if(users.length){
                         for(var user of users){
-                            document.querySelector('#chat_users_list').innerHTML +=
+                            modal_users_list.innerHTML +=
                                 '<li>'+
                                 '<a href="/mypage/' + user.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
                                 '<img class="w-10 h-10 rounded-full" src='+ user.profile_pic +'>'+
@@ -25,7 +25,7 @@ const chat_search_users = function(event){
                         }   
                     }
                     else{
-                        document.querySelector('#chat_users_list').innerHTML = "검색 결과가 없습니다."
+                        modal_users_list.innerHTML = "검색 결과가 없습니다."
                     }
                 }
             }
@@ -35,7 +35,7 @@ const chat_search_users = function(event){
         xhttp.send();
     }    
     else{
-        document.querySelector('#chat_users_list').innerHTML = '';
+        modal_users_list.innerHTML = '';
     }
 };
 
@@ -49,9 +49,9 @@ function getFollowings(user_tag){
     xhr.onload = ()=>{
         if (xhr.status === 200) {
         followings = JSON.parse(xhr.responseText);
-        document.querySelector('#modal-chat-users-list').innerHTML = "";
+        modal_users_list.innerHTML = "";
         for(var following of followings){
-            document.querySelector('#modal-chat-users-list').innerHTML +=
+            modal_users_list.innerHTML +=
                 '<li>'+
                 '<a href="/chat/' + following.tag + '" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">'+
                 '<img class="w-10 h-10 object-cover rounded-full p-1" src='+ following.profile_pic +'>'+

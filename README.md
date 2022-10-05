@@ -9,15 +9,18 @@ Instagram 클론 프로젝트입니다.
 
 그 이후 혼자 공부하며 개발하는 중입니다.
 
-접속 주소: [https://tyk-dstagram.herokuapp.com/](https://tyk-dstagram.herokuapp.com/)
+접속 주소: [https://dstagram-ec2.kro.kr/](https://dstagram-ec2.kro.kr/)
 
 ## 사용 기술
 
 - Django, Python
-- AWS S3
+- nginx, gunicorn, uvicorn
+- Docker
+- AWS EC2, S3, CloudFront, ELB
 - javascript
 - git
-- heroku
+- github action
+
 
 ## 주요기능
 

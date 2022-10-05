@@ -19,6 +19,7 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.opponent = self.scope['url_route']['kwargs']['opponent_tag']
         self.user = self.scope['user']
+        print(self.user)
         room_exist = Room.objects.filter(users__tag=self.user.tag).filter(users__tag=self.opponent)
         self.room = room_exist[0] if room_exist.count() else Room.objects.create()
         self.room_group_name = f'chat_{self.room.id}'

@@ -147,13 +147,13 @@ def photo_list_user(request, user_tag): #특정 유저의 게시글 로드
     page_num = int(request.POST.get('page_num')) if request.POST.get('page_num')!=None else 1
     this_user = get_object_or_404(User, tag=user_tag)
     followed = None
-    followed_tmp = Follow.objects.filter(user=request.user, follow=this_user).order_by('-created')
+    followed_tmp = Follow.objects.filter(user=request.user, follow=this_user)
     followers = Follow.objects.filter(follow=this_user).count()
     followings = Follow.objects.filter(user=this_user).count()
     if followed_tmp.count():
         followed = followed_tmp[0]
 
-    posts = Post.objects.prefetch_related('user_photos').filter(author=this_user)[(page_num-1)*9:page_num*9]
+    posts = Post.objects.prefetch_related('user_photos').filter(author=this_user).order_by('-created')[(page_num-1)*9:page_num*9]
     posts = posts.annotate(num_like=Count('like')) \
         .annotate(bool_like=Exists(Like.objects.filter(post=OuterRef('id'), user=request.user.id)))
     return render(request, 'photo/mypage.html',
