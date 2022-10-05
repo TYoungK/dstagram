@@ -1,13 +1,13 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
 
 SESSION_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-
+LOGIN_REDIRECT_URL = '/'
 #
 # DATABASES = {
 #     'default': {
