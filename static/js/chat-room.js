@@ -11,13 +11,6 @@ function validURL(str) {
     return pattern.test(str);
 }
 
-function create_protocol(str){
-    if(!str.startsWith('http')){
-        str = 'http://' + str
-    }
-    return str
-}
-
 function createLeftMessage(str){
     if(validURL(str)){
         return '<li class="flex items-center px-4"><div class="px-4 border w-fit max-w-[50%]">' + 
@@ -58,7 +51,7 @@ chatMessageSend.onclick = function() {
 let chatSocket = null;
 
 function connect() {
-    chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/");
+    chatSocket = new WebSocket(window.location.protocol == "https:" ? "wss" : "ws") + "://" + window.location.host + "/ws/chat/" + roomName + "/");
 
     chatSocket.onopen = function(e) {
         console.log("Successfully connected to the WebSocket.");
