@@ -28,13 +28,6 @@ services:
       - static:/home/app/web/static
       - media:/home/app/web/media
 
-  db:
-    container_name: db
-    image: keinos/sqlite3
-    restart: always
-    environment:
-      - SQLITE3_DB=db.dstagram
-
   redis:
     container_name: redis
     image: redis:latest

@@ -137,8 +137,7 @@ def photo_list(request): #팔로우 한 유저들의 게시글 로드
                      posts.filter(author=request.user.id).order_by('-created'))[(page_num-1)*9:page_num*9]
     follows_post = follows_post.annotate(num_like=Count('like'))\
         .annotate(bool_like=Exists(Like.objects.filter(post=OuterRef('id'), user=request.user.id)))
-    print(request.user.id)
-    print(follows_post)
+
     return render(request, 'photo/list.html', {'posts': follows_post})
 
 
