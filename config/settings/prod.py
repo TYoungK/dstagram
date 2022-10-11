@@ -8,7 +8,7 @@ CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 LOGIN_REDIRECT_URL = '/'
-#
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
