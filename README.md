@@ -11,12 +11,16 @@ Instagram 클론 프로젝트입니다.
 
 접속 주소: [https://dstagram-ec2.kro.kr/](https://dstagram-ec2.kro.kr/)
 
+## 서버 구성
+CloudFront - AWS ELB - Nginx - gunicorn(uvicorn) - Django
+
 ## 사용 기술
 
 - Django, Python
-- nginx, gunicorn, uvicorn
+- nginx, gunicorn
 - Docker
 - AWS EC2, S3, CloudFront, ELB
+- AWS RDS MySQL 8.0
 - javascript
 - git
 - github action
@@ -27,12 +31,23 @@ Instagram 클론 프로젝트입니다.
 - 회원 가입 및 로그인, 로그아웃
 - 회원 정보 수정 및 탈퇴
 - 이미지 다중 업로드(한 게시글에 최대 10개)
-- 게시글 수정,삭제
-- 게시글 좋아요,취소
+- 게시글 수정, 삭제
+- 게시글 좋아요, 취소
+- 게시글 공유(DM)
 - 유저 팔로우, 취소
 - 비동기 유저 검색
+- DM(비동기 실시간 채팅)
 
-## 패치 노트
+## 변경 사항
+
+### v1.0
+- 서버 이전: 헤로쿠 -> AWS EC2
+- DB변경: SQLite -> AWS RDS MySQL 
+- github action과 docker compose를 이용한 ci/cd 파이프라인 구축
+- CloudFront와 ACM 인증서를 이용한 무료 도메인 연결
+- ACM 인증서를 이용한 https 통신
+- Django Chanel을 이용한 비동기 실시간 채팅 구현
+- 환경 변수 .env로 정리 및 git actions secrets 값으로 추가
 
 ### v0.9
 
@@ -68,7 +83,7 @@ Instagram 클론 프로젝트입니다.
 2. 팔로우 할 유저 추천
 3. 검색 페이지 추가
 4. 해시태그
-5. 게시글 공유
+5. ~~게시글 공유~~
 6. 게시글 우측 상단 점 세개 버튼 활성화
 7. 댓글 기능 구현 (현재 DISQUS 사용)
 8. 마이페이지 게시글 리스트 Grid Layout으로 변경
@@ -77,8 +92,9 @@ Instagram 클론 프로젝트입니다.
 11. 회원 가입 유효성 검사 보완
 12. 회원 가입 이메일과 휴대폰 인증
 13. 코드와 파일 리팩토링
-14. AWS EC2로 서버 이전
-15. 추후 컨셉을 잡으면서 관련 기능들 생각나는 대로 추가 예정
+14. ~~AWS EC2로 서버 이전~~
+15. 채팅 알람
+16. 추후 생각나는 대로 추가 예정
 
 ## 모델 구조
 
@@ -138,5 +154,24 @@ Instagram 클론 프로젝트입니다.
 | post | ForeignKey(Post) |
 | user | ForeignKey(User) |
 | created | DateTimeField |
+
+---
+
+**Room**
+
+| 필드명 | 타입 |
+| --- | --- |
+| name | Charfield |
+| users | ManyToManyField(User) |
+
+---
+**Message**
+
+| 필드명 | 타입 |
+| --- | --- |
+| room | ForeignKey(Room) |
+| user | ForeignKey(User) |
+| content | Charfield |
+| timestamp | DateTimeField |
 
 ---
