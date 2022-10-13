@@ -14,6 +14,10 @@ from django.db import transaction
 from .forms import *
 from .serializers import *
 # Create your views here.
+import logging
+
+
+logger = logging.getLoger('django')
 
 
 class PhotoUploadView(LoginRequiredMixin, CreateView):
@@ -23,24 +27,27 @@ class PhotoUploadView(LoginRequiredMixin, CreateView):
     success_url = '/'
 
     def get_context_data(self, **kwargs):
+        logger.info("{} {} {} 102 get_context_data in".format(self.request.method, self.request.path, self.request.headers['User-Agent']))
         context = super(PhotoUploadView, self).get_context_data(**kwargs)
         if self.request.POST:
             context['photos'] = PostAndPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
             PostAndPhotoFormSet.extra = 1
             context['photos'] = PostAndPhotoFormSet(instance=self.object)
+        logger.info("{} {} {} 102 get_context_data out".format(self.request.method, self.request.path, self.request.headers['User-Agent']))
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         images = context['photos']
         form.instance.author_id = self.request.user.id
+        logger.info("{} {} {} 102 form_valid transaction in".format(self.request.method, self.request.path, self.request.headers['User-Agent']))
         with transaction.atomic():
             self.object = form.save()
             if images.is_valid():
                 images.instance = self.object
                 images.save()
-
+        logger.info("{} {} {} 200 form_valid transaction out".format(self.request.method, self.request.path, self.request.headers['User-Agent']))
         return super(PhotoUploadView, self).form_valid(form)
 
 

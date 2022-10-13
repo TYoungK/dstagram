@@ -74,11 +74,11 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console', 'mail_admins', 'django_logs'],
             'level': 'INFO',
         },
         'django.server': {
-            'handlers': ['django.server', 'django_logs'],
+            'handlers': ['django.server', ],
             'level': 'INFO',
             'propagate': False,
         },
