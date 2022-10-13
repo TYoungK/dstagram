@@ -47,7 +47,7 @@ RUN mkdir $APP_HOME/media
 RUN mkdir $APP_HOME/data
 RUN mkdir $APP_HOME/data/db
 RUN mkdir $APP_HOME/data/redis
-RUN mkdir $APP_HOME/logs/django.log
+RUN mkdir $APP_HOME/logs
 WORKDIR $APP_HOME
 
 # install dependencies

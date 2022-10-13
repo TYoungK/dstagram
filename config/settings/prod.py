@@ -60,14 +60,16 @@ LOGGING = {
         'gunicorn': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'log/gunicorn.log',
+            'when': 'h',
             'formatter': 'verbose',
-            'filename': 'log/gunicorn.log',
         },
         'django_logs': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'log/django.log',
+            'when': 'h',
             'formatter': 'verbose',
-            'filename': 'log/django.log',
         },
     },
     'loggers': {
