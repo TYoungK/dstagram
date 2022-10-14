@@ -3,7 +3,10 @@ from accounts.models import User
 from django.urls import reverse
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill, Transpose
+from PIL import Image
 
+
+Image.MAX_IMAGE_PIXELS = None
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
