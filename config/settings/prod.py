@@ -60,7 +60,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'gunicorn': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': 'logs/gunicorn.log',
             'when': 'h',
@@ -80,12 +80,12 @@ LOGGING = {
             'level': 'INFO',
         },
         'django.server': {
-            'handlers': ['django.server', ],
+            'handlers': ['django.server', 'django_logs'],
             'level': 'INFO',
             'propagate': False,
         },
         'gunicorn.logs': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'handlers': ['gunicorn'],
             'propagate': True,
         },
