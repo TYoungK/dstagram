@@ -54,6 +54,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'django.server',
         },
+        'django.request': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.request',
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
@@ -81,6 +86,11 @@ LOGGING = {
         },
         'django.server': {
             'handlers': ['django.server', ],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['django.request'],
             'level': 'INFO',
             'propagate': False,
         },
