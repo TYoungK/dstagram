@@ -39,6 +39,11 @@ LOGGING = {
             'format': '[{server_time}] {message}',
             'style': '{',
         },
+        'django.request': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
         'verbose': {
             'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s'
         }
