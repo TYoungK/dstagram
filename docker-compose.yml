@@ -42,7 +42,23 @@ services:
       - .:/app
     depends_on: # db 컨테이너로 연결
       - db
+
+
+  nginx:
+    container_name: nginx
+    build: ./nginx/ # 이 폴더 안에도 Dockerfile이 있고 이 도커파일에서 설정파일인 nginx.conf 파일로 연결시켜준다
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - static:/home/app/web/static
+      - media:/home/app/web/media
+
+
 volumes:
+  static:
+  media:
   app:
   dbdata:
   redisdata:

@@ -6,7 +6,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.prod # "Dockerfile"이 아니라 뒤에 prod가 붙기 때문에 명시적으로 작성
-    command: gunicorn --capture-output config.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 -t 300 --keep-alive 300 --access-logfile logs/gunicorn.access.log --error-logfile logs/gunicorn.error.log
+    command: gunicorn --capture-output config.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 -t 300 --keep-alive 300 --error-logfile logs/gunicorn.error.log
     environment:
       PYTHONUNBUFFERED: 1
       DJANGO_SETTINGS_MODULE: config.settings.prod # prod.py
