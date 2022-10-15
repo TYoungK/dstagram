@@ -11,6 +11,8 @@ CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 LOGIN_REDIRECT_URL = '/'
 
+FILE_UPLOAD_TEMP_DIR = 'tmp'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
