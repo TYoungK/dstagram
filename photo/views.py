@@ -27,15 +27,21 @@ class PhotoUploadView(LoginRequiredMixin, CreateView):
     success_url = '/'
 
     def get_context_data(self, **kwargs):
+        logger.info("{} {} {} 102 get context data in".format(self.request.method, self.request.path,
+                                                                     self.request.headers['User-Agent']))
         context = super(PhotoUploadView, self).get_context_data(**kwargs)
         if self.request.POST:
             context['photos'] = PostAndPhotoFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
             PostAndPhotoFormSet.extra = 1
             context['photos'] = PostAndPhotoFormSet(instance=self.object)
+        logger.info("{} {} {} 102 get context data out".format(self.request.method, self.request.path,
+                                                              self.request.headers['User-Agent']))
         return context
 
     def form_valid(self, form):
+        logger.info("{} {} {} 102 form_valid".format(self.request.method, self.request.path,
+                                                                     self.request.headers['User-Agent']))
         context = self.get_context_data()
         images = context['photos']
         form.instance.author_id = self.request.user.id
