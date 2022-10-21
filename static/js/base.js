@@ -105,12 +105,12 @@ $(document).ready(function(){
         var url = document.location.href.split('/');
         if(url[1] == 'mypage'){
             xhttp.open("POST", 'mypage/' + url[2], true);
-            xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+            xhttp.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
             xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhttp.send('page_num=' + (Number($(this).attr('data'))+1));
         }else{
             xhttp.open("POST", '', true);
-            xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+            xhttp.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
             xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhttp.send('page_num=' + (Number($(this).attr('data'))+1));
         }

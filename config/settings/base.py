@@ -253,14 +253,7 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
-        'gunicorn': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'gunicorn.log',
-            'when': 'h',
-            'formatter': 'verbose',
-        },
-        'django_logs': {
+        'django.csrf': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': 'django.log',
@@ -283,15 +276,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        'gunicorn.logs': {
+        'django.security.csrf': {
+            'handlers': ['django.csrf'],
             'level': 'DEBUG',
-            'handlers': ['gunicorn'],
-            'propagate': True,
-        },
-        'django.all_logs': {
-            'level': 'DEBUG',
-            'handlers': ['django_logs'],
             'propagate': False,
         },
+
     }
 }
