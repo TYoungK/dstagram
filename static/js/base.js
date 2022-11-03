@@ -103,7 +103,6 @@ $(document).ready(function(){
             }
         }
         var url = document.location.href.split('/');
-        var csrftoken = {{ csrf_token }};
         if(url[1] == 'mypage'){
             xhttp.open("POST", 'mypage/' + url[2], true);
             xhttp.setRequestHeader("X-CSRFToken", csrftoken);
